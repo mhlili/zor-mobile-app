@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
+import { Tabs } from 'expo-router';
+import { Pressable, StyleSheet, View as RNView, Platform } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
@@ -15,45 +13,96 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+function AddButton({ onPress }: { onPress: () => void }) {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
+    <Pressable onPress={onPress} style={styles.addButton}>
+      <FontAwesome name="plus" size={32} color="#fff" />
+    </Pressable>
   );
 }
+
+export default function TabLayout() {
+  const colorScheme = useColorScheme();
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  return (
+    <>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          tabBarStyle: styles.tabBar,
+          headerShown: useClientOnlyValue(false, true),
+        }}>
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="trends"
+          options={{
+            title: 'Trends',
+            tabBarIcon: ({ color }) => <TabBarIcon name="line-chart" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="add"
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              setModalVisible(true);
+            },
+          }}
+          options={{
+            title: '',
+            tabBarIcon: () => (
+              <AddButton onPress={() => setModalVisible(true)} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="qa"
+          options={{
+            title: 'Q&A',
+            tabBarIcon: ({ color }) => <TabBarIcon name="question" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: 'Profile',
+            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          }}
+        />
+      </Tabs>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  tabBar: {
+    height: 80,
+    backgroundColor: '#fff',
+    borderTopColor: '#e0e0e0',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 8,
+  },
+  addButton: {
+    width: 60,
+    height: 60,
+    backgroundColor: 'gray',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Platform.OS === 'ios' ? 20 : 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+  },
+});
