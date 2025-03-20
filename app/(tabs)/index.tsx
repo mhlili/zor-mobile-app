@@ -9,7 +9,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { router } from 'expo-router';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { Calendar } from "react-native-calendars";
 import DayDetailModal from '@/app/dayDetailModal';
 
@@ -44,12 +44,9 @@ export default function Home() {
       <ScrollView style={styles.scrollView}>
         <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-        {/* Header with settings */}
+        {/* Header */}
         <View style={styles.header}>
           <View style={{ flex: 1 }} />
-          <TouchableOpacity style={styles.medicationButton}>
-            <FontAwesome name="medkit" size={24} color="#999" />
-          </TouchableOpacity>
         </View>
 
         {/* Seizure Counter */}
