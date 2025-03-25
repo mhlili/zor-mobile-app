@@ -6,10 +6,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 import { useColorScheme } from '@/components/useColorScheme';
 
+//AsyncStorage.removeItem('@completedOnboarding');
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -38,18 +37,15 @@ export default function RootLayout() {
     if (error) throw error;
   }, [error]);
 
-  // Check if onboarding is completed when app starts
   useEffect(() => {
     const checkOnboardingStatus = async () => {
       try {
         const onboardingState = await AsyncStorage.getItem('@completedOnboarding');
-        if (onboardingState === 'true') {
-          setIsOnboardingCompleted(true);
-        } else {
-          setIsOnboardingCompleted(false);
-        }
+        console.log('Onboarding status:', onboardingState); // Debugging
+        setIsOnboardingCompleted(onboardingState === 'true'); // Ensure boolean conversion
       } catch (error) {
-        console.error('Error checking onboarding state:', error);
+        console.error('Error fetching onboarding status:', error);
+        setIsOnboardingCompleted(false); // Default to false if an error occurs
       }
     };
 
@@ -76,15 +72,14 @@ function RootLayoutNav({ isOnboardingCompleted }: { isOnboardingCompleted: boole
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        {isOnboardingCompleted ? (
-          // If onboarding is completed, show the main tabs
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        ) : (
-          // If onboarding is not completed, show the onboarding screen
+        {!isOnboardingCompleted ? (
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        ) : (
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         )}
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
   );
 }
+

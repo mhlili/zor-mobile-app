@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Button from '@/components/onboarding/nextbutton';
+import { useRouter } from 'expo-router';
 
 const slides = [
   {
@@ -24,22 +26,53 @@ const slides = [
   },
 ];
 
-export default function Onboarding({ onDone }: { onDone: () => void }) {
-  return (
-    <AppIntroSlider
-      data={slides}
-      renderItem={({ item }) => (
-        <View style={styles.slide}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.text}>{item.text}</Text>
-        </View>
-      )}
-      onDone={onDone}
-      showSkipButton
-      onSkip={onDone}
-    />
-  );
-}
+export default function Onboarding() {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const router = useRouter();
+  
+    const completeOnboarding = async () => {
+      try {
+        await AsyncStorage.setItem('@completedOnboarding', 'true');
+        router.replace('/'); // Navigate to home screen
+      } catch (error) {
+        console.error('Error saving onboarding state:', error);
+      }
+    };
+
+    const handleNextSlide = () => {
+        if (activeIndex < slides.length - 1) {
+          setActiveIndex(activeIndex + 1); // Move to next slide
+        } else {
+          completeOnboarding(); // Finish onboarding if on last slide
+        }
+      };
+    
+    // This function will be called when a slide changes
+    const onSlideChange = (index: number) => {
+        setActiveIndex(index); // Update the active index
+    };
+  
+    return (
+      <AppIntroSlider
+        data={slides}
+        renderItem={({ item }) => (
+          <View style={styles.slide}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.text}>{item.text}</Text>
+            <Button
+            label={activeIndex === slides.length - 1 ? "Get Started" : "Next"}
+            theme={activeIndex === slides.length - 1 ? "primary" : undefined}
+            onPress={handleNextSlide}
+          />
+          </View>
+        )}
+        
+        onDone={completeOnboarding}
+        showSkipButton
+        onSkip={completeOnboarding}
+      />
+    );
+  }
 
 const styles = StyleSheet.create({
   slide: {
@@ -48,6 +81,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -59,3 +93,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+
