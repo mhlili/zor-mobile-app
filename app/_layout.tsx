@@ -3,8 +3,10 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -26,11 +28,33 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
+  
+  // Explicit type for useState, `boolean | null` ensures we handle the loading state properly.
+  const [isOnboardingCompleted, setIsOnboardingCompleted] = useState<boolean | null>(null);
+
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
+
+  // Check if onboarding is completed when app starts
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      try {
+        const onboardingState = await AsyncStorage.getItem('@completedOnboarding');
+        if (onboardingState === 'true') {
+          setIsOnboardingCompleted(true);
+        } else {
+          setIsOnboardingCompleted(false);
+        }
+      } catch (error) {
+        console.error('Error checking onboarding state:', error);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
 
   useEffect(() => {
     if (loaded) {
@@ -38,20 +62,27 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
+  // Wait until the fonts are loaded and onboarding status is checked
+  if (!loaded || isOnboardingCompleted === null) {
+    return null; // Show loading screen until check is done
   }
 
-  return <RootLayoutNav />;
+  return <RootLayoutNav isOnboardingCompleted={isOnboardingCompleted} />;
 }
 
-function RootLayoutNav() {
+function RootLayoutNav({ isOnboardingCompleted }: { isOnboardingCompleted: boolean }) {
   const colorScheme = useColorScheme();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        {isOnboardingCompleted ? (
+          // If onboarding is completed, show the main tabs
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        ) : (
+          // If onboarding is not completed, show the onboarding screen
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        )}
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
