@@ -5,31 +5,53 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '@/components/onboarding/nextbutton';
 import { useRouter } from 'expo-router';
 
-const slides = [
-  {
-    key: '1',
-    title: 'Welcome to ZOR!',
-    text: 'Your personalized experience starts here.',
-    //image: require('@/assets/onboarding1.png'), // Replace with your image path
-  },
-  {
-    key: '2',
-    title: 'Create an Account',
-    text: 'Sign up or log in to continue.',
-    //image: require('@/assets/onboarding2.png'),
-  },
-  {
-    key: '3',
-    title: 'Get Started',
-    text: 'Swipe to start using the app!',
-    //image: require('@/assets/onboarding3.png'),
-  },
-];
+import Slide1 from '@/app/onboarding-slides/welcome-slide';
+import Onboarding1 from '@/app/onboarding-slides/onboarding1';
+import Onboarding2 from '@/app/onboarding-slides/onboarding2';
+import Onboarding3 from '@/app/onboarding-slides/onboarding3';
+import Onboarding4 from '@/app/onboarding-slides/onboarding4';
+import Onboarding5 from '@/app/onboarding-slides/onboarding5';
+import Onboarding6 from '@/app/onboarding-slides/onboarding6';
+import Onboarding7 from '@/app/onboarding-slides/onboarding7';
+import Onboarding8 from '@/app/onboarding-slides/onboarding8';
+import Onboarding9 from '@/app/onboarding-slides/onboarding9';
+import Onboarding_fin from '@/app/onboarding-slides/onboarding-fin';
+
+
+
+const renderSlide = (index: number, onNext: () => void) => {
+    switch (index) {
+      case 0:
+        return <Slide1 onNext={onNext} />;
+      case 1:
+        return <Onboarding1 onNext={onNext} />;
+      case 2:
+        return <Onboarding2 onNext={onNext}/>;
+      case 3:
+        return <Onboarding3 onNext={onNext}/>;
+      case 4:
+        return <Onboarding4 onNext={onNext} />;
+      case 5:
+        return <Onboarding5 onNext={onNext} />;
+      case 6:
+        return <Onboarding6 onNext={onNext} />;
+      case 7:
+        return <Onboarding7 onNext={onNext} />;
+      case 8:
+        return <Onboarding8 onNext={onNext} />;
+      case 9:
+        return <Onboarding9 onNext={onNext} />;
+      case 10:
+        return <Onboarding_fin onNext={onNext} />;
+      default:
+        return null;
+    }
+  };
 
 export default function Onboarding() {
     const [activeIndex, setActiveIndex] = useState(0);
     const router = useRouter();
-  
+
     const completeOnboarding = async () => {
       try {
         await AsyncStorage.setItem('@completedOnboarding', 'true');
@@ -40,7 +62,7 @@ export default function Onboarding() {
     };
 
     const handleNextSlide = () => {
-        if (activeIndex < slides.length - 1) {
+        if (activeIndex < 11) {
           setActiveIndex(activeIndex + 1); // Move to next slide
         } else {
           completeOnboarding(); // Finish onboarding if on last slide
@@ -51,26 +73,11 @@ export default function Onboarding() {
     const onSlideChange = (index: number) => {
         setActiveIndex(index); // Update the active index
     };
-  
+
     return (
-      <AppIntroSlider
-        data={slides}
-        renderItem={({ item }) => (
-          <View style={styles.slide}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.text}>{item.text}</Text>
-            <Button
-            label={activeIndex === slides.length - 1 ? "Get Started" : "Next"}
-            theme={activeIndex === slides.length - 1 ? "primary" : undefined}
-            onPress={handleNextSlide}
-          />
-          </View>
-        )}
-        
-        onDone={completeOnboarding}
-        showSkipButton
-        onSkip={completeOnboarding}
-      />
+        <View style={{ flex: 1 }}>
+        {renderSlide(activeIndex, handleNextSlide)}
+      </View>
     );
   }
 

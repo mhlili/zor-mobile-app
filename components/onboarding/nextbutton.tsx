@@ -12,13 +12,11 @@ export default function Button({ label, theme, onPress}: Props) {
     return (
       <View
         style={[
-          styles.buttonContainer,
-          { borderWidth: 4, borderColor: '#CBCBCB', borderRadius: 18 },
+          styles.buttonContainer
         ]}>
         <Pressable
           style={[styles.button, { backgroundColor: '#CBCBCB' }]}
           onPress={onPress}> 
-          <FontAwesome name="picture-o" size={18} color="#000000" style={styles.buttonIcon} />
           <Text style={[styles.buttonLabel, { color: '#000000' }]}>{label}</Text>
         </Pressable>
       </View>
@@ -36,12 +34,15 @@ export default function Button({ label, theme, onPress}: Props) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
+    //position: 'absolute',
     width: 320,
-    height: 68,
-    marginHorizontal: 20,
+    height: 50,
+    //bottom: 40,
+    alignSelf: "center",
+    //marginHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 3,
+    padding: 2,
   },
   button: {
     borderRadius: 10,
@@ -50,9 +51,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-  },
-  buttonIcon: {
-    paddingRight: 8,
   },
   buttonLabel: {
     color: '#000000',
