@@ -5,7 +5,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
+  ScrollView,
 } from "react-native";
 import { X } from "react-native-feather";
 import SeizuresDetails from "./detail-screens/seizureDetails";
@@ -14,8 +14,7 @@ import AppetiteDetails from "./detail-screens/appetiteDetails";
 import SleepDetails from "./detail-screens/sleepDetails";
 import StressDetails from "./detail-screens/stressDetails";
 import { formatDate } from "@/utils/formatDate";
-
-const { width } = Dimensions.get("window");
+import { Feather } from "@expo/vector-icons";
 
 interface DayDetailProps {
   visible: boolean;
@@ -34,12 +33,17 @@ interface ProgressBarProps {
 }
 
 const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
-  // States for detail screens
   const [seizuresDetailVisible, setSeizuresDetailVisible] = useState(false);
   const [medicationDetailVisible, setMedicationDetailVisible] = useState(false);
   const [sleepDetailVisible, setSleepDetailVisible] = useState(false);
   const [stressDetailVisible, setStressDetailVisible] = useState(false);
   const [appetiteDetailVisible, setAppetiteDetailVisible] = useState(false);
+
+  // Sample medication data
+  const medications = [
+    { name: "Ibuprofen", dosage: "1500mg", total: "500 mg", taken: true },
+    { name: "Tegretol", dosage: "1000mg", ratio: "0/1", taken: false },
+  ];
 
   const ProgressBar = ({ value, max, labels }: ProgressBarProps) => {
     const percentage = (value / max) * 100;
@@ -97,94 +101,99 @@ const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
             </View>
 
             {/* Content */}
-            <View style={styles.content}>
-              <View style={styles.row}>
+            <ScrollView>
+              <View style={styles.content}>
                 {/* Seizures Card */}
+                <Text style={styles.sectionTitle}>Seizures</Text>
                 <TouchableOpacity
-                  style={styles.card}
+                  style={styles.seizureCard}
                   activeOpacity={0.7}
                   onPress={handleSeizuresTap}
                 >
-                  <Text style={styles.cardTitle}>Seizures</Text>
-                  <Text style={styles.largeNumber}>1</Text>
+                  <Text style={styles.seizureCount}>1</Text>
+                  <TouchableOpacity
+                    style={styles.expandButton}
+                    onPress={handleSeizuresTap}
+                  >
+                    <Feather name="maximize-2" size={20} color="#999" />
+                  </TouchableOpacity>
                 </TouchableOpacity>
 
-                {/* Medication Card */}
-                <TouchableOpacity
-                  style={styles.card}
-                  activeOpacity={0.7}
-                  onPress={handleMedicationTap}
-                >
-                  <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>Medication</Text>
-                    <TouchableOpacity>
-                      <Text style={styles.newButton}>New</Text>
+                {/* Medication Section */}
+                <Text style={styles.sectionTitle}>Medication</Text>
+                <View style={styles.medicationCard}>
+                  {medications.map((med, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.medicationItem,
+                        index < medications.length - 1 &&
+                          styles.medicationItemBorder,
+                      ]}
+                      onPress={handleMedicationTap}
+                    >
+                      <View style={styles.medicationLeft}>
+                        <Text style={styles.medicationName}>{med.name}</Text>
+                        <Text style={styles.medicationDosage}>
+                          {med.dosage}
+                        </Text>
+                      </View>
+                      <Text style={styles.medicationStatus}>
+                        {med.total || med.ratio}
+                      </Text>
                     </TouchableOpacity>
-                  </View>
-                  <View style={styles.medicationContent}>
-                    <Text style={styles.medicationName}>Tegretol</Text>
-                    <Text style={styles.medicationDosage}>1000 mg</Text>
-                  </View>
+                  ))}
+                </View>
+
+                {/* Metrics Section */}
+                <Text style={styles.sectionTitle}>Your metrics</Text>
+
+                {/* Sleep Card */}
+                <TouchableOpacity
+                  style={styles.metricCard}
+                  activeOpacity={0.7}
+                  onPress={handleSleepTap}
+                >
+                  <Text style={styles.metricTitle}>Sleep</Text>
+                  <Text style={styles.metricValue}>8</Text>
+                  <ProgressBar
+                    value={8}
+                    max={12}
+                    labels={{ left: "1 hour", right: "12+ hours" }}
+                  />
+                </TouchableOpacity>
+
+                {/* Stress Card */}
+                <TouchableOpacity
+                  style={styles.metricCard}
+                  activeOpacity={0.7}
+                  onPress={handleStressTap}
+                >
+                  <Text style={styles.metricTitle}>Stress</Text>
+                  <Text style={styles.metricValue}>3</Text>
+                  <ProgressBar
+                    value={3}
+                    max={10}
+                    labels={{ left: "Not stressed", right: "Very stressed" }}
+                  />
+                </TouchableOpacity>
+
+                {/* Appetite Card */}
+                <TouchableOpacity
+                  style={styles.metricCard}
+                  activeOpacity={0.7}
+                  onPress={handleAppetiteTap}
+                >
+                  <Text style={styles.metricTitle}>Appetite</Text>
+                  <Text style={styles.metricValue}>5</Text>
+                  <ProgressBar
+                    value={5}
+                    max={10}
+                    labels={{ left: "Not hungry", right: "Very hungry" }}
+                  />
                 </TouchableOpacity>
               </View>
-
-              {/* Sleep Card */}
-              <TouchableOpacity
-                style={styles.fullWidthCard}
-                activeOpacity={0.7}
-                onPress={handleSleepTap}
-              >
-                <Text style={styles.cardTitle}>Sleep</Text>
-                <View style={styles.metricRow}>
-                  <Text style={styles.largeNumber}>8</Text>
-                  <View style={styles.progressWrapper}>
-                    <ProgressBar
-                      value={8}
-                      max={12}
-                      labels={{ left: "1 hour", right: "12+ hours" }}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-
-              {/* Stress Card */}
-              <TouchableOpacity
-                style={styles.fullWidthCard}
-                activeOpacity={0.7}
-                onPress={handleStressTap}
-              >
-                <Text style={styles.cardTitle}>Stress</Text>
-                <View style={styles.metricRow}>
-                  <Text style={styles.largeNumber}>3</Text>
-                  <View style={styles.progressWrapper}>
-                    <ProgressBar
-                      value={3}
-                      max={10}
-                      labels={{ left: "Not stressed", right: "Very stressed" }}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-
-              {/* Appetite Card */}
-              <TouchableOpacity
-                style={styles.fullWidthCard}
-                activeOpacity={0.7}
-                onPress={handleAppetiteTap}
-              >
-                <Text style={styles.cardTitle}>Appetite</Text>
-                <View style={styles.metricRow}>
-                  <Text style={styles.largeNumber}>5</Text>
-                  <View style={styles.progressWrapper}>
-                    <ProgressBar
-                      value={5}
-                      max={10}
-                      labels={{ left: "Not hungry", right: "Very hungry" }}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
+            </ScrollView>
           </View>
         </View>
 
@@ -227,11 +236,11 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   modalContainer: {
-    width: width - 40,
+    width: "100%",
     backgroundColor: "#f5f5f5",
     borderRadius: 20,
     overflow: "hidden",
@@ -259,51 +268,62 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
+  sectionTitle: {
+    fontSize: 16,
+    color: "#999",
+    marginTop: 16,
+    marginBottom: 8,
   },
-  card: {
+  seizureCard: {
     backgroundColor: "white",
     borderRadius: 16,
-    padding: 16,
-    width: "48%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  fullWidthCard: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 16,
+    padding: 20,
     marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    height: 120,
   },
-  cardHeader: {
+  seizureCount: {
+    fontSize: 72,
+    fontWeight: "bold",
+  },
+  expandButton: {
+    position: "absolute",
+    top: 16,
+    right: 16,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 20,
+    padding: 8,
+  },
+  medicationCard: {
+    backgroundColor: "white",
+    borderRadius: 16,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+    overflow: "hidden",
+  },
+  medicationItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    padding: 16,
   },
-  cardTitle: {
-    fontSize: 16,
-    color: "#999",
-    marginBottom: 8,
+  medicationItemBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
-  largeNumber: {
-    fontSize: 48,
-    fontWeight: "bold",
-  },
-  newButton: {
-    color: "#666",
-    fontWeight: "500",
+  medicationLeft: {
+    flex: 1,
   },
   medicationContent: {
     marginTop: 16,
@@ -317,9 +337,30 @@ const styles = StyleSheet.create({
     color: "#ccc",
     marginTop: 4,
   },
-  metricRow: {
-    flexDirection: "row",
-    alignItems: "center",
+  medicationStatus: {
+    fontSize: 16,
+    color: "#999",
+  },
+  metricCard: {
+    backgroundColor: "white",
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  metricTitle: {
+    fontSize: 16,
+    color: "#999",
+    marginBottom: 8,
+  },
+  metricValue: {
+    fontSize: 36,
+    fontWeight: "bold",
+    marginBottom: 16,
   },
   progressWrapper: {
     flex: 1,
