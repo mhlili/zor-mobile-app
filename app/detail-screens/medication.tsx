@@ -5,24 +5,23 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
-type Caregiver = {
-  name: string;
-  role: string;
-  emailAddress?: string;
-  phoneNumber?: string;
+type Medication = {
+  medication: string;
+  dosage: string;
+  frequency: string;
   id?: string;
 };
 
-export default function CaregiverScreen() {
+export default function MedicationScreen() {
   const router = useRouter();
-  const [caregivers, setCaregivers] = useState<Caregiver[]>([]);
+  const [medications, setMedications] = useState<Medication[]>([]);
 
   useFocusEffect(
     React.useCallback(() => {
       const loadData = async () => {
-        const stored = await AsyncStorage.getItem('caregivers');
+        const stored = await AsyncStorage.getItem('medications');
         if (stored) {
-          setCaregivers(JSON.parse(stored));
+          setMedications(JSON.parse(stored));
         }
       };
       loadData();
@@ -30,25 +29,25 @@ export default function CaregiverScreen() {
   );
 
   const handleSave = async () => {
-    await AsyncStorage.setItem('caregivers', JSON.stringify(caregivers));
-    Alert.alert('Saved', 'Caregivers updated!');
+    await AsyncStorage.setItem('medications', JSON.stringify(medications));
+    Alert.alert('Saved', 'Medications updated!');
     router.back();
   };
 
   const handleDelete = (index: number) => {
     Alert.alert(
-      'Remove Caregiver',
-      'Are you sure you want to delete this caregiver?',
+      'Remove Medication',
+      'Are you sure you want to delete this medication?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
-            const updated = [...caregivers];
+            const updated = [...medications];
             updated.splice(index, 1);
-            setCaregivers(updated);
-            await AsyncStorage.setItem('caregivers', JSON.stringify(updated));
+            setMedications(updated);
+            await AsyncStorage.setItem('medications', JSON.stringify(updated));
           },
         },
       ]
@@ -61,29 +60,29 @@ export default function CaregiverScreen() {
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-      <Text style={styles.pageTitle}>My Caregivers</Text>
+      <Text style={styles.pageTitle}>My Medication</Text>
 
       <View style={styles.section}>
         <View style={styles.cardHeader}>
-          <Text style={styles.sectionTitle}>Caregivers</Text>
-          <TouchableOpacity onPress={() => router.push('/modals/edit-caregiver')}>
+          <Text style={styles.sectionTitle}>Medication</Text>
+          <TouchableOpacity onPress={() => router.push('/modals/edit-medication')}>
             <Ionicons name="add-circle-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
 
-        {caregivers.length > 0 ? (
-          caregivers.map((cg, index) => (
-            <View key={cg.id || index} style={styles.caregiverCard}>
+        {medications.length > 0 ? (
+          medications.map((med, index) => (
+            <View key={med.id || index} style={styles.caregiverCard}>
               <View style={styles.avatar} />
               <View style={styles.caregiverInfo}>
-                <Text style={styles.nameText}>{cg.name}</Text>
-                <Text style={styles.roleText}>{cg.role}</Text>
+                <Text style={styles.nameText}>{med.medication}</Text>
+                <Text style={styles.roleText}>{med.dosage}-{med.frequency}</Text>
               </View>
               <View style={styles.iconRow}>
                 <TouchableOpacity
                   onPress={() =>
                     router.push({
-                      pathname: '/modals/edit-caregiver',
+                      pathname: '/modals/edit-medication',
                       params: { index: index.toString() },
                     })
                   }
@@ -98,7 +97,7 @@ export default function CaregiverScreen() {
             </View>
           ))
         ) : (
-          <Text style={styles.input}>No caregivers added</Text>
+          <Text style={styles.input}>No medications added</Text>
         )}
       </View>
     </View>

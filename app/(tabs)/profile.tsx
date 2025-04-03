@@ -7,8 +7,9 @@ import { useFocusEffect } from '@react-navigation/native';
 
 type Medication = {
   id: string;
-  name: string;
+  medication: string;
   dosage: string;
+  frequency: string;
 };
 
 type Caregiver = {
@@ -28,7 +29,6 @@ export default function ProfileScreen() {
 
   const router = useRouter();
 
-  // Load data when screen is focused
   useFocusEffect(
     React.useCallback(() => {
       const loadData = async () => {
@@ -42,20 +42,14 @@ export default function ProfileScreen() {
           const parsed = JSON.parse(storedMedications);
           setMedications(parsed || []);
         } else {
-          setMedications([
-            { id: '1', name: 'Keppra', dosage: '10mg - 4x/Day' },
-            { id: '2', name: 'Vimpat', dosage: '20mg - 2x/Day' },
-          ]);
+          setMedications([]);
         }
 
         if (storedCaregivers) {
           const parsed = JSON.parse(storedCaregivers);
           setCaregivers(parsed || []);
         } else {
-          setCaregivers([
-            { id: '1', name: 'Jane', role: 'Family' },
-            { id: '2', name: 'Anne Rayez', role: 'Primary Care Physician' },
-          ]);
+          setCaregivers([]);
         }
       };
 
@@ -67,7 +61,9 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.topHeader}>
-        <Text style={styles.title}>Profile</Text>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>Profile</Text>
+        </View>
         <TouchableOpacity onPress={() => router.push('/detail-screens/settings')}>
           <Ionicons name="settings" size={24} color="black" />
         </TouchableOpacity>
@@ -86,14 +82,18 @@ export default function ProfileScreen() {
             name="chevron-forward"
             size={18}
             color="black"
-            onPress={() => router.push('/modals/edit-medication')}
+            onPress={() => router.push('/detail-screens/medication')}
           />
         </View>
         {medications.length > 0 ? (
           medications.map((med) => (
-            <View key={med.id} style={styles.listItem}>
-              <Text style={styles.listItemText}>{med.name}</Text>
-              <Text style={styles.listItemSubText}>{med.dosage}</Text>
+            <View key={med.id} style={styles.caregiverItem}>
+              <View style={styles.listItemDetails}>
+                <Text style={styles.listItemText}>{med.medication}</Text>
+                <Text style={styles.listItemSubText}>
+                  {med.dosage} - {med.frequency}
+                </Text>
+              </View>
             </View>
           ))
         ) : (
@@ -139,9 +139,17 @@ const styles = StyleSheet.create({
   },
   topHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: 20,
+    position: 'relative',
+  },
+  titleWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    position: 'absolute',
+    left: 0,
+    right: 0,
   },
   title: {
     fontSize: 20,
@@ -157,7 +165,6 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center',
   },
   status: {
@@ -181,11 +188,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  listItem: {
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    paddingVertical: 10,
   },
   caregiverItem: {
     flexDirection: 'row',
