@@ -56,7 +56,7 @@ export default function SettingsScreen() {
         {/* Name Field */}
         <View style={styles.inputRow}>
           <Text style={styles.label}>Name</Text>
-          <TouchableOpacity onPress={() => router.push('/modals/edit-name')}>
+          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-name')}>
             <View style={styles.editableRow}>
               <Text style={styles.input}>{name || 'Not set'}</Text>
               <Ionicons name="pencil" size={16} color="gray" />
@@ -67,7 +67,7 @@ export default function SettingsScreen() {
         {/* Sex Field */}
         <View style={styles.inputRow}>
           <Text style={styles.label}>Sex</Text>
-          <TouchableOpacity onPress={() => router.push('/modals/edit-sex')}>
+          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-sex')}>
             <View style={styles.editableRow}>
               <Text style={styles.input}>{sex || 'Not set'}</Text>
               <Ionicons name="pencil" size={16} color="gray" />
@@ -82,7 +82,7 @@ export default function SettingsScreen() {
 
         <View style={styles.inputRow}>
           <Text style={styles.label}>Email</Text>
-          <TouchableOpacity onPress={() => router.push('/modals/edit-email')}>
+          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-email')}>
             <View style={styles.editableRow}>
               <Text style={styles.input}>{email || 'Not set'}</Text>
               <Ionicons name="pencil" size={16} color="gray" />
@@ -92,7 +92,7 @@ export default function SettingsScreen() {
 
         <View style={styles.inputRow}>
           <Text style={styles.label}>Phone Number</Text>
-          <TouchableOpacity onPress={() => router.push('/modals/edit-phone')}>
+          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-phone')}>
             <View style={styles.editableRow}>
               <Text style={styles.input}>{phone || 'Not set'}</Text>
               <Ionicons name="pencil" size={16} color="gray" />
@@ -102,7 +102,7 @@ export default function SettingsScreen() {
 
         <View style={styles.inputRow}>
           <Text style={styles.label}>Password</Text>
-          <TouchableOpacity onPress={() => router.push('/modals/edit-password')}>
+          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-password')}>
             <View style={styles.editableRow}>
               <Text style={styles.input}>{'*'.repeat(password.length) || 'Not set'}</Text>
               <Ionicons name="pencil" size={16} color="gray" />

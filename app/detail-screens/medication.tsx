@@ -65,7 +65,7 @@ export default function MedicationScreen() {
       <View style={styles.section}>
         <View style={styles.cardHeader}>
           <Text style={styles.sectionTitle}>Medication</Text>
-          <TouchableOpacity onPress={() => router.push('/modals/edit-medication')}>
+          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-medication')}>
             <Ionicons name="add-circle-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -82,7 +82,7 @@ export default function MedicationScreen() {
                 <TouchableOpacity
                   onPress={() =>
                     router.push({
-                      pathname: '/modals/edit-medication',
+                      pathname: '/edit-screens/edit-medication',
                       params: { index: index.toString() },
                     })
                   }

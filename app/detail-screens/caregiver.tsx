@@ -66,7 +66,7 @@ export default function CaregiverScreen() {
       <View style={styles.section}>
         <View style={styles.cardHeader}>
           <Text style={styles.sectionTitle}>Caregivers</Text>
-          <TouchableOpacity onPress={() => router.push('/modals/edit-caregiver')}>
+          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-caregiver')}>
             <Ionicons name="add-circle-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -83,7 +83,7 @@ export default function CaregiverScreen() {
                 <TouchableOpacity
                   onPress={() =>
                     router.push({
-                      pathname: '/modals/edit-caregiver',
+                      pathname: '/edit-screens/edit-caregiver',
                       params: { index: index.toString() },
                     })
                   }
