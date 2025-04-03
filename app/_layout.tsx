@@ -54,6 +54,7 @@ function RootLayoutNav() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         <Stack.Screen name="detail-screens/settings" options={{ title: 'Settings' }} />
+        <Stack.Screen name="detail-screens/medication" options={{ title: 'Medications' }} />
         <Stack.Screen name="modals/edit-name" options={{ presentation: 'modal', headerShown: false }} />
       </Stack>
     </ThemeProvider>

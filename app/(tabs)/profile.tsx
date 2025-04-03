@@ -23,6 +23,8 @@ export default function ProfileScreen() {
 
         if (storedName) setName(storedName);
         else setName('Abby Smith'); // fallback
+        if (storedCaregivers) setName(storedCaregivers);
+        else setName('John Smith'); // fallback
 
         if (storedMedications) {
           const parsedMedications = JSON.parse(storedMedications);
@@ -39,7 +41,7 @@ export default function ProfileScreen() {
           setCaregivers(parsedCaregivers || []);
         } else {
           setCaregivers([
-            { id: '1', name: 'Kimberly Chung', role: 'Family' },
+            { id: '1', name: storedCaregivers, role: 'Family' },
             { id: '2', name: 'Anne Rayez', role: 'Primary Care Physician' }
           ]); // Fallback
         }
@@ -103,7 +105,7 @@ export default function ProfileScreen() {
             name="chevron-forward"
             size={18}
             color="black"
-            onPress={() => router.push('/modals/edit-caregiver')}
+            onPress={() => router.push('/detail-screens/caregiver')}
           />
         </View>
         {caregivers.length > 0 ? caregivers.map((cg) => (
