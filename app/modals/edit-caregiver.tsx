@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, StyleSheet, TextInput, TouchableOpacity, Alert,
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -38,14 +43,23 @@ export default function EditCaregiverScreen() {
   }, []);
 
   const handleSave = async () => {
+    // ✅ Validate required fields
+    if (!firstName.trim() || !lastName.trim() || !role.trim()) {
+      Alert.alert('Missing Information', 'Please fill in all required fields.');
+      return;
+    }
+
     const stored = await AsyncStorage.getItem('caregivers');
     const caregivers = stored ? JSON.parse(stored) : [];
 
     const newCaregiver = {
-      name: `${firstName} ${lastName}`,
-      emailAddress,
-      phoneNumber,
-      role,
+      id: isEditing
+        ? caregivers[parseInt(index as string, 10)]?.id || Date.now().toString()
+        : Date.now().toString(),
+      name: `${firstName.trim()} ${lastName.trim()}`,
+      emailAddress: emailAddress.trim(),
+      phoneNumber: phoneNumber.trim(),
+      role: role.trim(),
     };
 
     if (isEditing) {
@@ -62,16 +76,22 @@ export default function EditCaregiverScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{isEditing ? 'Edit' : 'Add'} Caregiver</Text>
-      <Text style={styles.label}>First name</Text>
+
+      <Text style={styles.label}>First name *</Text>
       <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} />
-      <Text style={styles.label}>Last name</Text>
+
+      <Text style={styles.label}>Last name *</Text>
       <TextInput style={styles.input} value={lastName} onChangeText={setLastName} />
+
       <Text style={styles.label}>Email Address</Text>
       <TextInput style={styles.input} value={emailAddress} onChangeText={setEmailAddress} />
+
       <Text style={styles.label}>Phone Number</Text>
       <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} />
-      <Text style={styles.label}>Caregiver Type</Text>
+
+      <Text style={styles.label}>Caregiver Type *</Text>
       <TextInput style={styles.input} value={role} onChangeText={setRole} />
+
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Save</Text>
       </TouchableOpacity>
@@ -114,5 +134,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: 'bold',
     fontSize: 16,
+    color: '#fff',
   },
 });
