@@ -1,49 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, StyleSheet, TextInput, TouchableOpacity, Alert
+  View, Text, StyleSheet, TextInput, TouchableOpacity, Alert,
 } from 'react-native';
-import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 export default function EditCaregiverScreen() {
   const router = useRouter();
+  const { index } = useLocalSearchParams();
+  const isEditing = typeof index !== 'undefined';
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [type, setType] = useState('');
-
-
+  const [role, setRole] = useState('');
 
   useEffect(() => {
     const load = async () => {
-      const caregiver = await AsyncStorage.getItem('caregiver');
-      const split = (caregiver ?? '').split(' ');
-      setFirstName(split[0] || '');
-      setLastName(split[1] || '');
-      const email = await AsyncStorage.getItem('emailAddress');
-      if (email) setEmailAddress(email);
-      const phone = await AsyncStorage.getItem('phoneNumber');
-      if (phone) setPhoneNumber(phone);
-      const type = await AsyncStorage.getItem('type');
-      if (type) setType(type);
+      const stored = await AsyncStorage.getItem('caregivers');
+      const caregivers = stored ? JSON.parse(stored) : [];
+
+      if (isEditing) {
+        const i = parseInt(index as string, 10);
+        const cg = caregivers[i];
+        if (cg) {
+          const split = (cg.name ?? '').split(' ');
+          setFirstName(split[0] || '');
+          setLastName(split[1] || '');
+          setEmailAddress(cg.emailAddress || '');
+          setPhoneNumber(cg.phoneNumber || '');
+          setRole(cg.role || '');
+        }
+      }
     };
     load();
   }, []);
 
   const handleSave = async () => {
-    await AsyncStorage.setItem('caregiver', `${firstName} ${lastName}`);
-    await AsyncStorage.setItem('emailAddress', emailAddress);
-    await AsyncStorage.setItem('phoneNumber', phoneNumber);
-    await AsyncStorage.setItem('type', type);
-    Alert.alert('Saved', 'Caregiver updated!');
+    const stored = await AsyncStorage.getItem('caregivers');
+    const caregivers = stored ? JSON.parse(stored) : [];
+
+    const newCaregiver = {
+      name: `${firstName} ${lastName}`,
+      emailAddress,
+      phoneNumber,
+      role,
+    };
+
+    if (isEditing) {
+      caregivers[parseInt(index as string, 10)] = newCaregiver;
+    } else {
+      caregivers.push(newCaregiver);
+    }
+
+    await AsyncStorage.setItem('caregivers', JSON.stringify(caregivers));
+    Alert.alert('Saved', 'Caregiver saved!');
     router.back();
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Edit Caregiver</Text>
+      <Text style={styles.title}>{isEditing ? 'Edit' : 'Add'} Caregiver</Text>
       <Text style={styles.label}>First name</Text>
       <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} />
       <Text style={styles.label}>Last name</Text>
@@ -53,7 +71,7 @@ export default function EditCaregiverScreen() {
       <Text style={styles.label}>Phone Number</Text>
       <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} />
       <Text style={styles.label}>Caregiver Type</Text>
-      <TextInput style={styles.input} value={type} onChangeText={setType} />
+      <TextInput style={styles.input} value={role} onChangeText={setRole} />
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Save</Text>
       </TouchableOpacity>
