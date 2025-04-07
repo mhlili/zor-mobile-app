@@ -53,6 +53,7 @@ const MedicationEditScreen = ({
     notes: "",
   });
   const [optionsVisible, setOptionsVisible] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const handleSave = () => {
     if (currentMedication.name) {
@@ -76,6 +77,7 @@ const MedicationEditScreen = ({
         frequency: "",
         notes: "",
       });
+      setShowAddForm(false);
     }
   };
 
@@ -178,45 +180,77 @@ const MedicationEditScreen = ({
               ))}
 
               {/* Form to add a medication */}
-              {/* <View style={styles.formContainer}>
-                <Text style={styles.inputLabel}>Name</Text>
-                <TextInput
-                  style={styles.input}
-                  value={currentMedication.name}
-                  onChangeText={(text) => setCurrentMedication({ ...currentMedication, name: text })}
-                  placeholder="Enter medication name"
-                />
+              {showAddForm ? (
+                <View style={styles.formContainer}>
+                  <Text style={styles.inputLabel}>Name</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={currentMedication.name}
+                    onChangeText={(text) =>
+                      setCurrentMedication({ ...currentMedication, name: text })
+                    }
+                    placeholder="Enter medication name"
+                  />
 
-                <Text style={styles.inputLabel}>Dosage</Text>
-                <TextInput
-                  style={styles.input}
-                  value={currentMedication.dosage}
-                  onChangeText={(text) => setCurrentMedication({ ...currentMedication, dosage: text })}
-                  placeholder="Enter dosage"
-                />
+                  <Text style={styles.inputLabel}>Dosage</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={currentMedication.dosage}
+                    onChangeText={(text) =>
+                      setCurrentMedication({
+                        ...currentMedication,
+                        dosage: text,
+                      })
+                    }
+                    placeholder="Enter dosage"
+                  />
 
-                <Text style={styles.inputLabel}>Frequency</Text>
-                <TextInput
-                  style={styles.input}
-                  value={currentMedication.frequency}
-                  onChangeText={(text) => setCurrentMedication({ ...currentMedication, frequency: text })}
-                  placeholder="Enter frequency"
-                />
+                  <Text style={styles.inputLabel}>Frequency</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={currentMedication.frequency}
+                    onChangeText={(text) =>
+                      setCurrentMedication({
+                        ...currentMedication,
+                        frequency: text,
+                      })
+                    }
+                    placeholder="Enter frequency"
+                  />
 
-                <Text style={styles.inputLabel}>Notes</Text>
-                <TextInput
-                  style={[styles.input, styles.notesInput]}
-                  value={currentMedication.notes}
-                  onChangeText={(text) => setCurrentMedication({ ...currentMedication, notes: text })}
-                  placeholder="Enter notes"
-                  multiline
-                  textAlignVertical="top"
-                />
-              </View> */}
-              {/* Add medication button */}
-              <TouchableOpacity style={styles.addButton}>
-                <Text style={styles.addButtonText}>Add medication</Text>
-              </TouchableOpacity>
+                  <Text style={styles.inputLabel}>Notes</Text>
+                  <TextInput
+                    style={[styles.input, styles.notesInput]}
+                    value={currentMedication.notes}
+                    onChangeText={(text) =>
+                      setCurrentMedication({
+                        ...currentMedication,
+                        notes: text,
+                      })
+                    }
+                    placeholder="Enter notes"
+                    multiline
+                    textAlignVertical="top"
+                  />
+                  <TouchableOpacity
+                    style={[styles.addButton, styles.confirmButton]}
+                    onPress={handleAddMedication}
+                  >
+                    <Text
+                      style={[styles.addButtonText, styles.confirmButtonText]}
+                    >
+                      Confirm
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => setShowAddForm(true)}
+                >
+                  <Text style={styles.addButtonText}>Add medication</Text>
+                </TouchableOpacity>
+              )}
             </ScrollView>
           </KeyboardAvoidingView>
 
@@ -366,6 +400,14 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontSize: 16,
     fontWeight: "500",
+  },
+  confirmButton: {
+    backgroundColor: "#007AFF",
+    borderColor: "#007AFF",
+    marginTop: 20,
+  },
+  confirmButtonText: {
+    color: "#fff",
   },
 });
 
