@@ -19,7 +19,7 @@ const OptionsMenu = ({
     <Modal
       visible={visible}
       transparent={true}
-      animationType="fade"
+      animationType="slide"
       onRequestClose={onClose}
     >
       <View style={styles.modalOverlay}>
@@ -28,7 +28,7 @@ const OptionsMenu = ({
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Options</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <X width={24} height={24} color="#000" />
+              <X width={24} height={24} color="#fff" />
             </TouchableOpacity>
           </View>
 
@@ -49,12 +49,13 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   modalContainer: {
-    width: "90%",
-    backgroundColor: "#f9f9f9",
+    width: "100%",
+    height: "25%",
+    backgroundColor: "#161616",
     borderRadius: 16,
     overflow: "hidden",
   },
@@ -64,10 +65,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 16,
     position: "relative",
+    backgroundColor: "#222",
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
+    color: "#fff",
   },
   closeButton: {
     position: "absolute",
@@ -87,8 +90,8 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: "#e0e0e0",
-    marginTop: 8,
+    backgroundColor: "#222",
+    marginTop: 4,
   },
 });
 

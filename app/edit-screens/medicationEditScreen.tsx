@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { MoreVertical } from "react-native-feather";
+import { MoreHorizontal } from "react-native-feather";
 import OptionsMenu from "./optionsMenu";
 
 export interface Medication {
@@ -121,50 +121,47 @@ const MedicationEditScreen = ({
             </View>
 
             {/* Date */}
-            <View style={styles.dateContainer}>
-              <Text style={styles.dateText}>{formatDate(date)}</Text>
-            </View>
-
             <ScrollView style={styles.scrollView}>
+              <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>{formatDate(date)}</Text>
+              </View>
+
               {/* Existing Medications */}
-              {medications.map((med) => (
+              {medications.map((med, index) => (
                 <View key={med.id} style={styles.formContainer}>
                   <View style={styles.formRow}>
                     <View style={styles.formHeader}>
-                      <Text style={styles.formTitle}>Medication</Text>
+                      <Text style={styles.formTitle}>{med.name}</Text>
                       <TouchableOpacity
                         style={styles.optionsButton}
                         onPress={() => setOptionsVisible(true)}
                       >
-                        <MoreVertical width={24} height={24} color="#000" />
+                        <MoreHorizontal width={24} height={24} color="#fff" />
                       </TouchableOpacity>
                     </View>
-                    <View style={styles.medicationHeader}>
-                      <TextInput
-                        style={[styles.input, styles.medicationName]}
-                        value={med.name}
-                        onChangeText={(text) =>
-                          handleEditMedication(med.id, { name: text })
-                        }
-                        placeholder="Enter medication name"
-                      />
-                    </View>
+
+                    <Text style={styles.inputLabel}>Total dosage</Text>
                     <TextInput
-                      style={[styles.input, styles.medicationDosage]}
+                      style={styles.input}
                       value={med.dosage}
                       onChangeText={(text) =>
                         handleEditMedication(med.id, { dosage: text })
                       }
                       placeholder="Enter dosage"
+                      placeholderTextColor="#666"
                     />
-                    <TextInput
-                      style={[styles.input, styles.medicationFrequency]}
-                      value={med.frequency}
-                      onChangeText={(text) =>
-                        handleEditMedication(med.id, { frequency: text })
-                      }
-                      placeholder="Enter frequency"
-                    />
+
+                    <Text style={styles.inputLabel}>Frequency</Text>
+                    <View style={styles.frequencyContainer}>
+                      <Text style={styles.frequencyValue}>
+                        {med.frequency || "Value"}
+                      </Text>
+                      <Text style={styles.changeFrequency}>
+                        Change frequency
+                      </Text>
+                    </View>
+
+                    <Text style={styles.inputLabel}>Notes</Text>
                     <TextInput
                       style={[styles.input, styles.notesInput]}
                       value={med.notes}
@@ -172,15 +169,20 @@ const MedicationEditScreen = ({
                         handleEditMedication(med.id, { notes: text })
                       }
                       placeholder="Enter notes"
+                      placeholderTextColor="#666"
                       multiline
                       textAlignVertical="top"
                     />
+
+                    {index < medications.length - 1 && (
+                      <View style={styles.divider} />
+                    )}
                   </View>
                 </View>
               ))}
 
               {/* Form to add a medication */}
-              {showAddForm ? (
+              {showAddForm && (
                 <View style={styles.formContainer}>
                   <Text style={styles.inputLabel}>Name</Text>
                   <TextInput
@@ -243,15 +245,19 @@ const MedicationEditScreen = ({
                     </Text>
                   </TouchableOpacity>
                 </View>
-              ) : (
+              )}
+              <View style={styles.scrollPadding} />
+            </ScrollView>
+            {!showAddForm && (
+              <View style={styles.fixedButtonContainer}>
                 <TouchableOpacity
                   style={styles.addButton}
                   onPress={() => setShowAddForm(true)}
                 >
                   <Text style={styles.addButtonText}>Add medication</Text>
                 </TouchableOpacity>
-              )}
-            </ScrollView>
+              </View>
+            )}
           </KeyboardAvoidingView>
 
           {/* Options Menu */}
@@ -270,7 +276,7 @@ const MedicationEditScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#222",
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -284,7 +290,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    color: "#fff",
   },
   cancelButton: {
     fontSize: 18,
@@ -293,53 +299,26 @@ const styles = StyleSheet.create({
   saveButton: {
     fontSize: 18,
     fontWeight: "500",
+    color: "#890fc1",
   },
   dateContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
+    paddingTop: 16,
     paddingBottom: 16,
+    backgroundColor: "#161616",
   },
   dateText: {
     fontSize: 16,
-    color: "#999",
-  },
-  yearText: {
-    fontSize: 16,
-    color: "#999",
+    color: "#676767",
   },
   scrollView: {
     flex: 1,
+    backgroundColor: "#161616",
   },
-  mainContent: {
-    alignItems: "center",
-    paddingVertical: 40,
-  },
-  largeNumber: {
-    fontSize: 48,
-    fontWeight: "bold",
-  },
-  subtitleText: {
-    fontSize: 18,
-    color: "#ccc",
-    marginTop: 4,
-  },
-  medicationCard: {
-    backgroundColor: "#f5f5f5",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    marginHorizontal: 20,
-  },
-  medicationHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  medicationName: {
-    fontSize: 18,
-    fontWeight: "600",
+  scrollPadding: {
+    height: 100,
   },
   medicationDosage: {
     fontSize: 16,
@@ -350,8 +329,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#999",
   },
+  frequencyContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#222222",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+  },
+  frequencyValue: {
+    fontSize: 16,
+    color: "#999",
+  },
+  changeFrequency: {
+    fontSize: 16,
+    color: "#999",
+  },
   formContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   formRow: {
     marginBottom: 20,
@@ -365,45 +361,59 @@ const styles = StyleSheet.create({
   formTitle: {
     fontSize: 20,
     fontWeight: "600",
+    color: "#fff",
   },
   optionsButton: {
     padding: 8,
   },
   inputLabel: {
     fontSize: 16,
-    color: "#999",
+    color: "#676767",
     marginBottom: 8,
   },
   input: {
+    backgroundColor: "#222",
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: "#303030",
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
     marginBottom: 20,
+    color: "#fff",
   },
   notesInput: {
-    height: 150,
-    paddingTop: 16,
+    height: 100,
+    textAlignVertical: "top",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#333",
+    marginVertical: 16,
+  },
+  fixedButtonContainer: {
+    position: "absolute",
+    bottom: -35,
+    left: 0,
+    right: 0,
+    backgroundColor: "#161616",
+    paddingBottom: 30,
+    paddingTop: 20,
+    paddingHorizontal: 20,
   },
   addButton: {
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    borderRadius: 30,
+    backgroundColor: "#890fc1",
+    borderRadius: 15,
     paddingVertical: 16,
     paddingHorizontal: 32,
     alignItems: "center",
-    marginHorizontal: 20,
-    marginVertical: 30,
   },
   addButtonText: {
     fontSize: 16,
     fontWeight: "500",
+    color: "#fff",
   },
   confirmButton: {
-    backgroundColor: "#007AFF",
-    borderColor: "#007AFF",
+    backgroundColor: "#890fc1",
     marginTop: 20,
   },
   confirmButtonText: {

@@ -39,10 +39,11 @@ const MedicationDetails = ({
       },
       {
         id: "2",
-        name: "Tegretol",
-        dosage: "1000mg",
-        frequency: "Once a day",
-        notes: "As usual. John took his Tegretol with breakfast.",
+        name: "Ibuprofen",
+        dosage: "400mg",
+        frequency: "As needed",
+        notes:
+          "Jack had a headache after lunch, so the nurse gave him some advil. His headache came back later in the day so I gave him another.",
       },
     ],
   });
@@ -70,7 +71,7 @@ const MedicationDetails = ({
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Medication</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <X width={24} height={24} color="#000" />
+            <X width={24} height={24} color="#fff" />
           </TouchableOpacity>
         </View>
 
@@ -81,16 +82,6 @@ const MedicationDetails = ({
 
         {/* Content */}
         <ScrollView style={styles.scrollView}>
-          {/* Main content */}
-          <View style={styles.mainContent}>
-            <Text style={styles.largeNumber}>
-              {medications.medications[0]?.name}
-            </Text>
-            <Text style={styles.subtitleText}>
-              {medications.medications[0]?.dosage}
-            </Text>
-          </View>
-
           {/* Details section */}
           <View style={styles.detailsSection}>
             <Text style={styles.sectionTitle}>Details</Text>
@@ -108,7 +99,7 @@ const MedicationDetails = ({
                 <ChevronDown
                   width={24}
                   height={24}
-                  color="#000"
+                  color="#fff"
                   style={[styles.chevron, expanded1 && styles.chevronExpanded]}
                 />
               </TouchableOpacity>
@@ -117,7 +108,7 @@ const MedicationDetails = ({
                 <>
                   {/* Dosage */}
                   <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Dosage</Text>
+                    <Text style={styles.detailLabel}>Total dosage</Text>
                     <Text style={styles.detailValue}>
                       {medications.medications[0].dosage}
                     </Text>
@@ -155,7 +146,7 @@ const MedicationDetails = ({
                 <ChevronDown
                   width={24}
                   height={24}
-                  color="#000"
+                  color="#fff"
                   style={[styles.chevron, expanded2 && styles.chevronExpanded]}
                 />
               </TouchableOpacity>
@@ -164,7 +155,7 @@ const MedicationDetails = ({
                 <>
                   {/* Dosage */}
                   <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Dosage</Text>
+                    <Text style={styles.detailLabel}>Total dosage</Text>
                     <Text style={styles.detailValue}>
                       {medications.medications[1].dosage}
                     </Text>
@@ -207,18 +198,19 @@ const MedicationDetails = ({
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#222",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#333",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    color: "#fff",
   },
   editButton: {
     paddingVertical: 8,
@@ -226,7 +218,7 @@ const styles = StyleSheet.create({
   },
   editText: {
     fontSize: 16,
-    color: "#666",
+    color: "#B1B1B1",
   },
   closeButton: {
     padding: 4,
@@ -235,42 +227,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingBottom: 16,
+    paddingBottom: 10,
   },
   dateText: {
     fontSize: 16,
-    color: "#999",
+    color: "#676767",
+    marginTop: 10,
   },
   scrollView: {
     flex: 1,
   },
-  mainContent: {
-    alignItems: "center",
-    paddingVertical: 40,
-  },
-  largeNumber: {
-    fontSize: 48,
-    fontWeight: "bold",
-  },
-  subtitleText: {
-    fontSize: 18,
-    color: "#ccc",
-    marginTop: 4,
-  },
   detailsSection: {
+    flex: 1,
+    minHeight: "100%",
     paddingHorizontal: 20,
+    paddingTop: 25,
     paddingBottom: 40,
+    backgroundColor: "#161616",
   },
   sectionTitle: {
-    fontSize: 18,
-    color: "#666",
+    fontSize: 16,
+    color: "#676767",
     marginBottom: 16,
   },
   detailCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#222",
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#eee",
     overflow: "hidden",
   },
   chevron: {
@@ -286,25 +268,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#333",
   },
   dropdownText: {
     fontSize: 16,
     fontWeight: "500",
+    color: "#fff",
   },
   detailRow: {
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#333",
   },
   detailLabel: {
     fontSize: 14,
-    color: "#999",
+    color: "#676767",
     marginBottom: 4,
   },
   detailValue: {
     fontSize: 16,
+    color: "#EAEAEA",
   },
   notesContainer: {
     padding: 16,
@@ -312,6 +296,7 @@ const styles = StyleSheet.create({
   notesText: {
     fontSize: 16,
     lineHeight: 24,
+    color: "#EAEAEA",
   },
 });
 

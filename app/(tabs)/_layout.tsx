@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
-import { Pressable, StyleSheet, View as RNView, Platform } from 'react-native';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
+import { Pressable, StyleSheet, Platform } from 'react-native';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={32} style={{ marginBottom: -2 }} {...props} />;
 }
 
 function AddButton({ onPress }: { onPress: () => void }) {
@@ -22,16 +20,21 @@ function AddButton({ onPress }: { onPress: () => void }) {
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   const [isModalVisible, setModalVisible] = useState(false);
+
+  const activeColor = "#890fc1";
+  const inactiveColor = "#6F6F6F";
 
   return (
     <>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          tabBarActiveTintColor: activeColor,
+          tabBarInactiveTintColor: inactiveColor,
           tabBarStyle: styles.tabBar,
-          headerShown: useClientOnlyValue(false, true),
+          headerShown: useClientOnlyValue(false, false),
+          tabBarItemStyle: styles.tabBarItem,
+          tabBarLabelStyle: styles.tabBarLabel,
         }}>
         <Tabs.Screen
           name="index"
@@ -44,7 +47,7 @@ export default function TabLayout() {
           name="trends"
           options={{
             title: 'Trends',
-            tabBarIcon: ({ color }) => <TabBarIcon name="line-chart" color={color} />,
+            tabBarIcon: ({ color }) => <TabBarIcon name="bar-chart" color={color} />,
           }}
         />
         <Tabs.Screen
@@ -63,10 +66,10 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="qa"
+          name="forum"
           options={{
-            title: 'Q&A',
-            tabBarIcon: ({ color }) => <TabBarIcon name="question" color={color} />,
+            title: 'Forum',
+            tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
           }}
         />
         <Tabs.Screen
@@ -83,16 +86,27 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 80,
-    backgroundColor: '#fff',
-    borderTopColor: '#e0e0e0',
+    height: 85,
+    backgroundColor: '#101010',
+    borderTopColor: '#333333',
+    borderTopWidth: 0.5,
     paddingBottom: Platform.OS === 'ios' ? 20 : 8,
+    paddingTop: 6,
+  },
+  tabBarItem: {
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabBarLabel: {
+    marginTop: 4,
+    fontSize: 11,
   },
   addButton: {
-    width: 60,
-    height: 60,
-    backgroundColor: 'gray',
-    borderRadius: 30,
+    width: 80,
+    height: 80,
+    backgroundColor: '#890fc1',
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Platform.OS === 'ios' ? 20 : 10,

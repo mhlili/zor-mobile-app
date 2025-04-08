@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { MoreVertical, X } from "react-native-feather";
+import { MoreHorizontal } from "react-native-feather";
 import { formatDate } from "@/utils/formatDate";
 import OptionsMenu from "./optionsMenu";
 
@@ -102,7 +102,7 @@ const SeizureEditScreen = ({
                       style={styles.optionsButton}
                       onPress={() => setOptionsVisible(true)}
                     >
-                      <MoreVertical width={24} height={24} color="#000" />
+                      <MoreHorizontal width={24} height={24} color="#fff" />
                     </TouchableOpacity>
                   </View>
 
@@ -143,13 +143,13 @@ const SeizureEditScreen = ({
                     multiline
                     textAlignVertical="top"
                   />
+
+                  {/* Add seizure button */}
+                  <TouchableOpacity style={styles.addButton}>
+                    <Text style={styles.addButtonText}>Add seizure</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-
-              {/* Add seizure button */}
-              <TouchableOpacity style={styles.addButton}>
-                <Text style={styles.addButtonText}>Add seizure</Text>
-              </TouchableOpacity>
             </ScrollView>
           </KeyboardAvoidingView>
 
@@ -169,7 +169,7 @@ const SeizureEditScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#222",
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    color: "#fff",
   },
   cancelButton: {
     fontSize: 18,
@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
   saveButton: {
     fontSize: 18,
     fontWeight: "500",
+    color: "#F36AFF",
   },
   dateContainer: {
     flexDirection: "row",
@@ -201,30 +202,29 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 16,
-    color: "#999",
-  },
-  yearText: {
-    fontSize: 16,
-    color: "#999",
+    color: "#676767",
   },
   scrollView: {
     flex: 1,
   },
   mainContent: {
     alignItems: "center",
-    paddingVertical: 40,
+    paddingVertical: 10,
+    marginBottom: 20,
   },
   largeNumber: {
-    fontSize: 72,
+    fontSize: 54,
     fontWeight: "bold",
+    color: "#fff",
   },
   subtitleText: {
     fontSize: 18,
-    color: "#ccc",
+    color: "#cbcbcb",
     marginTop: 4,
   },
   formContainer: {
     paddingHorizontal: 20,
+    backgroundColor: "#161616",
   },
   formRow: {
     marginBottom: 20,
@@ -233,37 +233,40 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginTop: 16,
     marginBottom: 16,
   },
   formTitle: {
     fontSize: 20,
     fontWeight: "600",
+    color: "#fff",
   },
   optionsButton: {
     padding: 8,
   },
   inputLabel: {
-    fontSize: 16,
-    color: "#999",
+    fontSize: 13,
+    color: "#676767",
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: "#303030",
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
     marginBottom: 20,
+    backgroundColor: "#222",
+    color: "#fff",
   },
   notesInput: {
     height: 150,
     paddingTop: 16,
   },
   addButton: {
-    backgroundColor: "#fff",
+    backgroundColor: "#890fc1",
     borderWidth: 1,
-    borderColor: "#e0e0e0",
-    borderRadius: 30,
+    borderRadius: 15,
     paddingVertical: 16,
     paddingHorizontal: 32,
     alignItems: "center",
@@ -273,6 +276,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontSize: 16,
     fontWeight: "500",
+    color: "#fff",
   },
 });
 
