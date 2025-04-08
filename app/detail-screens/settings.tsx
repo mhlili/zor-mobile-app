@@ -1,133 +1,101 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 
 export default function SettingsScreen() {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [sex, setSex] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const loadData = async () => {
-        const storedName = await AsyncStorage.getItem('name');
-        const storedSex = await AsyncStorage.getItem('sex');
-        const storedEmail = await AsyncStorage.getItem('email');
-        const storedPhone = await AsyncStorage.getItem('phone');
-        const storedPassword = await AsyncStorage.getItem('password');
-
-        if (storedName) setName(storedName);
-        if (storedSex) setSex(storedSex);
-        if (storedEmail) setEmail(storedEmail);
-        if (storedPhone) setPhone(storedPhone);
-        if (storedPassword) setPassword(storedPassword);
-      };
-      loadData();
-    }, []) // Ensures the data is reloaded when settings screen is focused
-  );
-
-  const handleSave = async () => {
-    await AsyncStorage.setItem('name', name);
-    await AsyncStorage.setItem('sex', sex);
-    await AsyncStorage.setItem('email', email);
-    await AsyncStorage.setItem('phone', phone);
-    await AsyncStorage.setItem('password', password);
-    alert('Settings Saved!');
-    router.back(); // Navigate back after saving
-  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={24} color="black" />
+        <Ionicons name="arrow-back" size={24} color="white" />
       </TouchableOpacity>
-
       <Text style={styles.title}>Settings</Text>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Personal</Text>
+      <ScrollView>
+        <Text style={styles.sectionHeader}>Account</Text>
 
-        {/* Name Field */}
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>Name</Text>
-          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-name')}>
-            <View style={styles.editableRow}>
-              <Text style={styles.input}>{name || 'Not set'}</Text>
-              <Ionicons name="pencil" size={16} color="gray" />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/settings-profile')}>
+          <Text style={styles.itemTitle}>Profile</Text>
+          <Text style={styles.itemSubtitle}>Name, email, password</Text>
+        </TouchableOpacity>
 
-        {/* Sex Field */}
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>Sex</Text>
-          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-sex')}>
-            <View style={styles.editableRow}>
-              <Text style={styles.input}>{sex || 'Not set'}</Text>
-              <Ionicons name="pencil" size={16} color="gray" />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
+        <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/settings-seizure-details')}>
+          <Text style={styles.itemTitle}>Seizure Details</Text>
+          <Text style={styles.itemSubtitle}>Edit seizure type and seizure card details</Text>
+        </TouchableOpacity>
 
-      {/* Account Info Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Account Information</Text>
+        <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/medication')}>
+          <Text style={styles.itemTitle}>Medication</Text>
+          <Text style={styles.itemSubtitle}>Medication details and reminder settings</Text>
+        </TouchableOpacity>
 
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>Email</Text>
-          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-email')}>
-            <View style={styles.editableRow}>
-              <Text style={styles.input}>{email || 'Not set'}</Text>
-              <Ionicons name="pencil" size={16} color="gray" />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/settings-metrics')}>
+          <Text style={styles.itemTitle}>Metrics</Text>
+          <Text style={styles.itemSubtitle}>Seizures, Sleep, Stress, and 4 others</Text>
+        </TouchableOpacity>
 
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>Phone Number</Text>
-          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-phone')}>
-            <View style={styles.editableRow}>
-              <Text style={styles.input}>{phone || 'Not set'}</Text>
-              <Ionicons name="pencil" size={16} color="gray" />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/caregiver')}>
+          <Text style={styles.itemTitle}>Caregivers</Text>
+          <Text style={styles.itemSubtitle}>Kimberly Chung, Anne Rayez</Text>
+        </TouchableOpacity>
 
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>Password</Text>
-          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-password')}>
-            <View style={styles.editableRow}>
-              <Text style={styles.input}>{'*'.repeat(password.length) || 'Not set'}</Text>
-              <Ionicons name="pencil" size={16} color="gray" />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
+        <Text style={styles.sectionHeader}>Preferences</Text>
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/settings-notifications')}>
+          <Text style={styles.itemTitle}>Notifications</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.sectionHeader}>Support</Text>
+
+        <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/settings-feedback')}>
+          <Text style={styles.itemTitle}>Give feedback</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/review')}>
+          <Text style={styles.itemTitle}>Write a review</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.item}>
+          <Text style={styles.itemTitle}>About</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f2f2f2', padding: 20 },
+  container: { flex: 1, backgroundColor: '#111', padding: 20 },
   backButton: { marginBottom: 10 },
-  title: { fontSize: 22, fontWeight: 'bold', textAlign: 'center', marginBottom: 20 },
-  section: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 20 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
-  inputRow: { borderBottomWidth: 1, borderBottomColor: '#ddd', paddingVertical: 10 },
-  label: { fontSize: 14, fontWeight: '500', marginBottom: 4 },
-  input: { fontSize: 16, color: 'gray' },
-  editableRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  saveButton: { backgroundColor: '#ccc', padding: 12, borderRadius: 10, marginTop: 20, alignItems: 'center' },
-  saveButtonText: { color: '#fff', fontWeight: 'bold' },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
+    marginBottom: 20,
+  },
+  sectionHeader: {
+    color: '#aaa',
+    fontSize: 14,
+    marginTop: 20,
+    marginBottom: 8,
+    fontWeight: '600',
+  },
+  item: {
+    backgroundColor: '#1a1a1a',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  itemTitle: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  itemSubtitle: {
+    color: '#888',
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

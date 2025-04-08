@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +17,7 @@ type Caregiver = {
   role: string;
   emailAddress?: string;
   phoneNumber?: string;
+  imageUri?: string;
   id?: string;
 };
 
@@ -29,30 +37,20 @@ export default function CaregiverScreen() {
     }, [])
   );
 
-  const handleSave = async () => {
-    await AsyncStorage.setItem('caregivers', JSON.stringify(caregivers));
-    Alert.alert('Saved', 'Caregivers updated!');
-    router.back();
-  };
-
   const handleDelete = (index: number) => {
-    Alert.alert(
-      'Remove Caregiver',
-      'Are you sure you want to delete this caregiver?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            const updated = [...caregivers];
-            updated.splice(index, 1);
-            setCaregivers(updated);
-            await AsyncStorage.setItem('caregivers', JSON.stringify(updated));
-          },
+    Alert.alert('Remove Caregiver', 'Are you sure you want to delete this caregiver?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          const updated = [...caregivers];
+          updated.splice(index, 1);
+          setCaregivers(updated);
+          await AsyncStorage.setItem('caregivers', JSON.stringify(updated));
         },
-      ]
-    );
+      },
+    ]);
   };
 
   return (
@@ -64,43 +62,43 @@ export default function CaregiverScreen() {
       <Text style={styles.pageTitle}>My Caregivers</Text>
 
       <View style={styles.section}>
-        <View style={styles.cardHeader}>
-          <Text style={styles.sectionTitle}>Caregivers</Text>
-          <TouchableOpacity onPress={() => router.push('/edit-screens/edit-caregiver')}>
-            <Ionicons name="add-circle-outline" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.sectionTitle}>Caregivers</Text>
 
         {caregivers.length > 0 ? (
           caregivers.map((cg, index) => (
             <View key={cg.id || index} style={styles.caregiverCard}>
-              <View style={styles.avatar} />
+              <Image
+                source={{ uri: cg.imageUri || 'https://via.placeholder.com/50' }}
+                style={styles.avatar}
+              />
               <View style={styles.caregiverInfo}>
                 <Text style={styles.nameText}>{cg.name}</Text>
                 <Text style={styles.roleText}>{cg.role}</Text>
               </View>
-              <View style={styles.iconRow}>
-                <TouchableOpacity
-                  onPress={() =>
-                    router.push({
-                      pathname: '/edit-screens/edit-caregiver',
-                      params: { index: index.toString() },
-                    })
-                  }
-                  style={{ marginRight: 12 }}
-                >
-                  <Ionicons name="pencil" size={18} color="gray" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(index)}>
-                  <Ionicons name="trash" size={18} color="gray" />
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/edit-screens/edit-caregiver',
+                    params: { index: index.toString() },
+                  })
+                }
+                style={{ marginLeft: 'auto' }}
+              >
+                <Ionicons name="chevron-forward" size={18} color="gray" />
+              </TouchableOpacity>
             </View>
           ))
         ) : (
           <Text style={styles.input}>No caregivers added</Text>
         )}
       </View>
+
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => router.push('/edit-screens/edit-caregiver')}
+      >
+        <Text style={styles.addButtonText}>Add new caregiver</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -126,15 +124,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
   },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 12,
   },
   caregiverCard: {
     flexDirection: 'row',
@@ -171,15 +164,16 @@ const styles = StyleSheet.create({
     color: '#666',
     padding: 12,
   },
-  saveButton: {
-    backgroundColor: '#ccc',
-    padding: 12,
-    borderRadius: 10,
-    marginTop: 20,
+  addButton: {
+    backgroundColor: '#a855f7',
+    paddingVertical: 16,
+    borderRadius: 20,
     alignItems: 'center',
+    marginTop: 'auto',
   },
-  saveButtonText: {
-    color: '#fff',
+  addButtonText: {
+    color: 'white',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
