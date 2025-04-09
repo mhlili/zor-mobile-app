@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View as RNView, Platform } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import LogDataModal from '@/components/LogDataModal';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -77,6 +78,11 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
+      {/* Log Data Modal */}
+      <LogDataModal
+          visible={isModalVisible}
+          onClose={() => setModalVisible(false)}
+        />
     </>
   );
 }
