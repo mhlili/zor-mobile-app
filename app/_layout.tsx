@@ -8,15 +8,16 @@ import 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from '@/components/useColorScheme';
 
+
 //AsyncStorage.removeItem('@completedOnboarding');
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
+} from "expo-router";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: "(tabs)",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -24,7 +25,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
   
@@ -70,7 +71,7 @@ function RootLayoutNav({ isOnboardingCompleted }: { isOnboardingCompleted: boole
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         {!isOnboardingCompleted ? (
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
@@ -78,6 +79,15 @@ function RootLayoutNav({ isOnboardingCompleted }: { isOnboardingCompleted: boole
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         )}
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="fullCalendar" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="log-data-screens/logSeizure"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="log-data-screens/dailySurvey"
+          options={{ headerShown: false }}
+        />
       </Stack>
     </ThemeProvider>
   );
