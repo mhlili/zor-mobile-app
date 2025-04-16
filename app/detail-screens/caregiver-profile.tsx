@@ -5,9 +5,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
   Image,
-  Linking
+  Linking,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -61,37 +60,6 @@ export default function CaregiverProfileScreen() {
     }
   };
 
-  const handleSave = async () => {
-    if (!firstName.trim() || !lastName.trim() || !role.trim()) {
-      Alert.alert('Missing Info', 'First name, last name, and caregiver type are required.');
-      return;
-    }
-
-    const stored = await AsyncStorage.getItem('caregivers');
-    const caregivers = stored ? JSON.parse(stored) : [];
-
-    const newCaregiver = {
-      id: isEditing
-        ? caregivers[parseInt(index as string, 10)]?.id || Date.now().toString()
-        : Date.now().toString(),
-      name: `${firstName.trim()} ${lastName.trim()}`,
-      emailAddress: emailAddress.trim(),
-      phoneNumber: phoneNumber.trim(),
-      role: role.trim(),
-      imageUri: imageUri,
-    };
-
-    if (isEditing) {
-      caregivers[parseInt(index as string, 10)] = newCaregiver;
-    } else {
-      caregivers.push(newCaregiver);
-    }
-
-    await AsyncStorage.setItem('caregivers', JSON.stringify(caregivers));
-    Alert.alert('Saved', 'Caregiver saved!');
-    router.back();
-  };
-
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -143,24 +111,40 @@ export default function CaregiverProfileScreen() {
       {/* Details Section */}
       <View style={styles.detailsCard}>
         <Text style={styles.label}>First name</Text>
-        <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} />
+        <TextInput
+          style={styles.input}
+          value={firstName}
+          editable={false}
+        />
 
         <Text style={styles.label}>Last name</Text>
-        <TextInput style={styles.input} value={lastName} onChangeText={setLastName} />
+        <TextInput
+          style={styles.input}
+          value={lastName}
+          editable={false}
+        />
 
         <Text style={styles.label}>Phone number</Text>
-        <TextInput style={[styles.input, { color: '#a855f7' }]} value={phoneNumber} onChangeText={setPhoneNumber} />
+        <TextInput
+          style={[styles.input, { color: '#890FC1' }]}
+          value={phoneNumber}
+          editable={false}
+        />
 
         <Text style={styles.label}>Email address</Text>
-        <TextInput style={[styles.input, { color: '#a855f7' }]} value={emailAddress} onChangeText={setEmailAddress} />
+        <TextInput
+          style={[styles.input, { color: '#890FC1' }]}
+          value={emailAddress}
+          editable={false}
+        />
 
         <Text style={styles.label}>Caregiver type</Text>
-        <TextInput style={styles.input} value={role} onChangeText={setRole} />
+        <TextInput
+          style={styles.input}
+          value={role}
+          editable={false}
+        />
       </View>
-
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveText}>Save</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -168,33 +152,67 @@ export default function CaregiverProfileScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#111', padding: 20 },
   headerRow: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   editLabel: { color: '#aaa', fontSize: 14 },
   imageWrapper: { alignSelf: 'center', marginBottom: 12 },
-  image: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#333' },
-  nameText: { color: 'white', fontSize: 20, fontWeight: '600', textAlign: 'center', marginBottom: 16 },
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#333',
+  },
+  nameText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
   actionRow: {
-    flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginBottom: 20,
   },
   callButton: {
-    backgroundColor: '#a855f7', padding: 12, borderRadius: 10, flexDirection: 'row', alignItems: 'center', gap: 8,
+    backgroundColor: '#890FC1',
+    padding: 12,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   emailButton: {
-    backgroundColor: '#333', padding: 12, borderRadius: 10, flexDirection: 'row', alignItems: 'center', gap: 8,
-  },
-  buttonText: { color: 'white', fontWeight: '600' },
-  detailsCard: {
-    backgroundColor: '#1a1a1a', borderRadius: 16, padding: 16,
-  },
-  label: { color: '#888', marginTop: 16, fontSize: 14 },
-  input: {
-    borderBottomWidth: 1, borderBottomColor: '#333', paddingVertical: 6,
-    fontSize: 16, color: 'white', marginBottom: 8,
-  },
-  saveButton: {
-    backgroundColor: '#a855f7', padding: 14, borderRadius: 12, marginTop: 24,
+    backgroundColor: '#333',
+    padding: 12,
+    borderRadius: 10,
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
-  saveText: { color: 'white', fontWeight: 'bold', fontSize: 16 },
+  buttonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  detailsCard: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: 16,
+    padding: 16,
+  },
+  label: {
+    color: '#888',
+    marginTop: 16,
+    fontSize: 14,
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingVertical: 6,
+    fontSize: 16,
+    color: 'white',
+    marginBottom: 8,
+  },
 });

@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,14 +13,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function CardScreen() {
   const router = useRouter();
   const [flipped, setFlipped] = useState(false);
+
   const [name, setName] = useState('');
+  const [type, setType] = useState('');
+  const [frequency, setFrequency] = useState('');
+  const [unit, setUnit] = useState('');
+  const [duration, setDuration] = useState('');
 
   useEffect(() => {
-    const loadName = async () => {
+    const load = async () => {
       const storedName = await AsyncStorage.getItem('name');
+      const storedType = await AsyncStorage.getItem('seizureType');
+      const storedFrequency = await AsyncStorage.getItem('seizureFrequency');
+      const storedUnit = await AsyncStorage.getItem('seizureUnit');
+      const storedDuration = await AsyncStorage.getItem('seizureDuration');
+
       setName(storedName || 'Name');
+      setType(storedType || 'Tonic-Clonic');
+      setFrequency(storedFrequency || '1');
+      setUnit(storedUnit || 'Days');
+      setDuration(storedDuration || '0–15 seconds');
     };
-    loadName();
+
+    load();
   }, []);
 
   const handleFlip = () => {
@@ -24,7 +45,9 @@ export default function CardScreen() {
   const front = (
     <View style={[styles.card, { backgroundColor: '#2b0033' }]}>
       <Text style={styles.name}>{name}</Text>
-      <Text style={styles.condition}>Suffers from <Text style={{ fontWeight: 'bold' }}>Tonic-Clonic Seizures</Text></Text>
+      <Text style={styles.condition}>
+        Suffers from <Text style={{ fontWeight: 'bold' }}>{type} Seizures</Text>
+      </Text>
       <View style={styles.bottomRow}>
         <Text style={styles.info}>Call (555) 103-4503</Text>
         <Text style={styles.info}>DOB 09/15/2004</Text>
@@ -34,11 +57,20 @@ export default function CardScreen() {
 
   const back = (
     <View style={[styles.card, { backgroundColor: '#1a1a1a' }]}>
-      <Text style={styles.cardTitle}>Tonic-Clonic Seizures</Text>
+      <Text style={styles.cardTitle}>{type} Seizures</Text>
       <Text style={styles.cardDescription}>
         <Text style={{ fontStyle: 'italic' }}>
-          Results in a loss of consciousness, stiffening of the body (tonic phase), and subsequent jerking movements (clonic phase).
+          {type === 'Tonic-Clonic'
+            ? 'Results in a loss of consciousness, stiffening of the body (tonic phase), and subsequent jerking movements (clonic phase).'
+            : 'Seizure type details not available.'}
         </Text>
+        {"\n\n"}
+        <Text style={{ fontWeight: 'bold' }}>
+          Frequency:
+        </Text> Every {frequency} {unit.toLowerCase()} {"\n"}
+        <Text style={{ fontWeight: 'bold' }}>
+          Duration:
+        </Text> {duration}
         {"\n\n"}
         <Text style={{ fontWeight: 'bold' }}>Take the individual to a hospital </Text>
         <Text style={{ fontStyle: 'italic', fontWeight: 'bold' }}>immediately</Text>
@@ -97,7 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 24,
     justifyContent: 'space-between',
-    height: 220,
+    height: 260,
   },
   name: {
     fontSize: 20,
@@ -127,9 +159,11 @@ const styles = StyleSheet.create({
   cardDescription: {
     color: '#ddd',
     fontSize: 14,
+    lineHeight: 20,
   },
   flipHint: {
     color: '#aaa',
     textAlign: 'center',
+    marginTop: 10,
   },
 });

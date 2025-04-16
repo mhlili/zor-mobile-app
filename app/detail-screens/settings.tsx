@@ -13,7 +13,7 @@ export default function SettingsScreen() {
       </TouchableOpacity>
       <Text style={styles.title}>Settings</Text>
 
-      <ScrollView>
+      <ScrollView style={{ flex: 1 }}>
         <Text style={styles.sectionHeader}>Account</Text>
 
         <TouchableOpacity style={styles.item} onPress={() => router.push('/detail-screens/settings-profile')}>
@@ -61,6 +61,11 @@ export default function SettingsScreen() {
           <Text style={styles.itemTitle}>About</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Sign out button */}
+      <TouchableOpacity style={styles.signOutButton} onPress={() => {}}>
+        <Text style={styles.signOutText}>Sign out</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -97,5 +102,17 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: 13,
     marginTop: 4,
+  },
+  signOutButton: {
+    backgroundColor: '#2a2a2a',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  signOutText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });

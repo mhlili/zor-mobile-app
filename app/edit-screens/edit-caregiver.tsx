@@ -12,6 +12,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function EditCaregiverScreen() {
   const router = useRouter();
@@ -49,10 +50,17 @@ export default function EditCaregiverScreen() {
     load();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        handleSave(); // Save automatically when navigating away
+      };
+    }, [firstName, lastName, emailAddress, phoneNumber, role, notes, imageUri])
+  );
+
   const handleSave = async () => {
     if (!firstName.trim() || !lastName.trim() || !role.trim()) {
-      Alert.alert('Missing Information', 'Please fill in all required fields.');
-      return;
+      return; // Skip save if required fields are empty
     }
 
     const stored = await AsyncStorage.getItem('caregivers');
@@ -77,8 +85,6 @@ export default function EditCaregiverScreen() {
     }
 
     await AsyncStorage.setItem('caregivers', JSON.stringify(caregivers));
-    Alert.alert('Saved', 'Caregiver saved!');
-    router.back();
   };
 
   const handleDelete = async () => {
@@ -143,10 +149,6 @@ export default function EditCaregiverScreen() {
           <Text style={styles.deleteText}>Remove Caregiver</Text>
         </TouchableOpacity>
       )}
-
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveText}>Save</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -178,8 +180,4 @@ const styles = StyleSheet.create({
   deleteText: {
     color: 'red', fontWeight: 'bold', fontSize: 16,
   },
-  saveButton: {
-    backgroundColor: '#a855f7', padding: 14, borderRadius: 12, marginTop: 24, alignItems: 'center',
-  },
-  saveText: { color: 'white', fontWeight: 'bold', fontSize: 16 },
 });

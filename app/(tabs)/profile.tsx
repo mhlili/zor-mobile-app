@@ -154,17 +154,15 @@ export default function ProfileScreen() {
       {/* My Metrics */}
       <View style={{ marginTop: 20 }}>
         <Text style={styles.sectionHeader}>My metrics</Text>
-        {metrics.slice(0, 5).map((m, i) => (
-          <Text key={i} style={styles.metricItem}>
-            {typeof m === 'string' ? m : m.name}
-          </Text>
-        ))}
-        <TouchableOpacity
-          style={styles.viewAllButton}
-          onPress={() => router.push('/detail-screens/settings-metrics')}
-        >
-          <Text style={styles.viewAllText}>View all</Text>
-        </TouchableOpacity>
+        <View style={styles.metricPillContainer}>
+            {metrics.slice(0, 5).map((m, i) => (
+                <View key={i} style={styles.metricPill}>
+                    <Text style={styles.metricPillText}>
+                        {typeof m === 'string' ? m : m.name}
+                    </Text>
+                </View>
+            ))}
+        </View>
       </View>
     </ScrollView>
   );
@@ -226,6 +224,23 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     fontSize: 16,
   },
+  metricPillContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 8,
+  },
+  metricPill: {
+    backgroundColor: '#1a1a1a',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginBottom: 8,
+  },
+  metricPillText: {
+    color: 'white',
+    fontSize: 14,
+  },  
   viewAllButton: {
     marginTop: 8,
     backgroundColor: '#333',

@@ -149,19 +149,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#222', color: 'white', borderRadius: 10, padding: 10, width: 60, textAlign: 'center',
   },
   ampm: { color: '#aaa', padding: 10 },
-  ampmSelected: { color: '#a855f7' },
+  ampmSelected: { color: '#890FC1' },
   daysRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 },
   day: {
     width: 36, height: 36, borderRadius: 18, backgroundColor: '#333', justifyContent: 'center', alignItems: 'center',
   },
-  daySelected: { backgroundColor: '#a855f7' },
+  daySelected: { backgroundColor: '#890FC1' },
   dayText: { color: 'white', fontSize: 13 },
   scaleRow: { flexDirection: 'row', gap: 12, alignItems: 'center', marginTop: 12 },
   scaleInput: {
     backgroundColor: '#222', color: 'white', padding: 12, borderRadius: 10, width: 60, textAlign: 'center',
   },
   submitButton: {
-    backgroundColor: '#a855f7', paddingVertical: 14, borderRadius: 16, alignItems: 'center', marginTop: 30,
+    backgroundColor: '#890FC1', paddingVertical: 14, borderRadius: 16, alignItems: 'center', marginTop: 30,
   },
   submitText: { color: 'white', fontWeight: 'bold', fontSize: 16 },
 });
