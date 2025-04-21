@@ -294,16 +294,15 @@ const styles = StyleSheet.create({
   
   frequencyInput: {
     minWidth: 45,
-    height: 45,
+    height: 50,
     borderWidth: 1,
     borderColor: '#303030',
     borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
     color: '#FFF',
     backgroundColor: '#222222',
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   
   intervalDropdownContainer: {
@@ -335,7 +334,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#222222',
     borderColor: '#303030',
     borderRadius: 10,
-    height: 45,
+    height: 50,
     borderWidth: 1,
   },
   dropdownTextStyle: {
@@ -346,7 +345,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#222222',
     borderColor: '#303030',
     borderRadius: 10,
-    borderWidth: 1,
-  },
-  
+    borderWidth: 1
+  }
 });
