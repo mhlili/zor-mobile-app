@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import Button from '@/components/onboarding/nextbutton';
+import Button from '@/components/onboarding/continueButton';
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   TextInput,
@@ -9,6 +9,7 @@ import { useRouter, useNavigation } from "expo-router";
 import { AntDesign } from "@expo/vector-icons"; // For back arrow
 import ProgressBar from '@/components/onboarding/progress-bar'; 
 import { ScreenStackHeaderConfig } from 'react-native-screens';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function Onboarding4({ onNext}: { onNext: () => void }) { 
@@ -25,37 +26,38 @@ export default function Onboarding4({ onNext}: { onNext: () => void }) {
     const handleContinue = () => {
       if (isFormValid) {
         console.log("Selected Gender:", selectedGender);
-        router.push("/onboarding-slides/onboarding5"); // Navigate to the next registration step
+        router.push("/onboarding-slides/seizureTypeScreen"); // Navigate to the next registration step
       }
     };
 
     const handleSkip = () => {
     console.log("Skipped selection");
-    router.push("/onboarding-slides/onboarding5"); // Navigate without selection
+    router.push("/onboarding-slides/seizureTypeScreen"); // Navigate without selection
   };
     
 
   return (
-    <View style={styles.container}>
-      <ProgressBar activeIndex={2} totalDots={7} />
+    <SafeAreaView style={styles.baseContainer}>
+      <View style={styles.progressBarContainer}>
+      <ProgressBar activeIndex={2} totalDots={10} />
+      </View>
+    <View style={styles.bodyContainer}>
 
-      <View style={styles.headerContainer}>
+    <View style={styles.navContainer}>
       {/* Back arrow button */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <AntDesign name="arrowleft" size={24} color="black" />
+              <AntDesign name="arrowleft" size={24} color="white" />
             </TouchableOpacity>
       
       {/* Skip button */}
       <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
               <Text style={styles.skipButtonText}>Add later</Text>
             </TouchableOpacity>
-
-      </View>
+            </View>
       
 
-
       {/* Title & Instructions */}
-      <Text style={styles.title}>Sex assigned at birth</Text>
+      <Text style={styles.title}>Sex assigned at birth?</Text>
       
       {/* Gender Buttons */}
       <View style={styles.buttonContainer}>
@@ -73,25 +75,38 @@ export default function Onboarding4({ onNext}: { onNext: () => void }) {
         ))}
       </View>
 
-      <View style={styles.footerContainer}>
+      </View>
+
       <Button
       theme="primary" label="Continue"
         onPress={handleContinue}
         />
-      </View>
       
-    </View>
+    
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 40,
-    backgroundColor: "#fff",
+  baseContainer: {
+    flex:1,
+  backgroundColor: '#161616'
   },
-    headerContainer: {
+  progressBarContainer: {
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    backgroundColor: "#161616",
+    },
+  bodyContainer: {
+      flex: 1,
+      paddingHorizontal: 20,
+      paddingTop: 5,
+      backgroundColor: "#161616",
+    },
+  backButton: {
+    marginBottom: 0,
+  },
+    navContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between', // Places buttons at opposite ends
       alignItems: 'center', // Ensures vertical alignment
@@ -99,8 +114,26 @@ const styles = StyleSheet.create({
     },
   skipButtonText: {
     fontSize: 16,
-    color: '#585858',
-    textDecorationLine: 'underline',
+    color: '#BCBCBC',
+  },
+  genderButton: {
+    width: '100%',
+    height: 50,
+    padding: 1,
+    backgroundColor: '#1E1E1E',
+    borderRadius: 15,
+    marginHorizontal: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedGenderButton: {
+    backgroundColor: '#393939',
+    borderColor: "#B9B9B9",
+    borderWidth: 1,
+  },
+  genderButtonText: {
+    fontSize: 16,
+    color: '#FFF',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -109,39 +142,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     gap: 10
   },
-  genderButton: {
-    width: 340,
-    height: 50,
-    padding: 2,
-    backgroundColor: '#F2F2F2',
-    borderRadius: 10,
-    marginHorizontal: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  selectedGenderButton: {
-    backgroundColor: '#CBCBCB', // You can change this to any color for selected state
-  },
-  genderButtonText: {
-    fontSize: 16,
-    color: '#585858',
-  },
-  backButton: {
-    padding: 0
-  },
   skipButton: {
     padding: 0
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     marginBottom: 10,
-  },
-  footerContainer: {
-    flex: 1 / 3,
-    position:"absolute",
-    bottom: 40,
-    alignItems: 'center',
-    paddingHorizontal: 25,
+    color: '#FFF'
   }
 });

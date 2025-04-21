@@ -1,30 +1,35 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import Button from '@/components/onboarding/continueButton';
 
-export default function Login() {
+export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
 
-  const handleLogin = () => {
-    if (email === "test@example.com" && password === "password") {
-      Alert.alert("Login Successful", "Welcome to ZOR!");
-      router.replace("/(tabs)"); // Navigate to the home screen
-    } else {
-      Alert.alert("Login Failed", "Invalid email or password");
-      router.push("/onboarding-slides/onboarding4");
+  const handleRegister = () => {
+    if (!email || !password || !confirmPassword) {
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
     }
+
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match.");
+      return;
+    }
+
+    Alert.alert("Registration Successful", "You can now log in.");
+    router.replace("/login"); // Redirect to login page
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Log in</Text>
+      <Text style={styles.title}>Register</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Email address"
+        placeholder="Email Address"
         keyboardType="email-address"
         autoCapitalize="none"
         value={email}
@@ -38,19 +43,27 @@ export default function Login() {
         value={password}
         onChangeText={setPassword}
       />
-      <View style={styles.footerContainer}>
-      <Button theme="primary" label="Continue"
-        onPress={handleLogin}/>
-      </View>
 
-      <TouchableOpacity onPress={() => router.push("/register")}>
-        <Text style={styles.link}>Don't have an account? Register</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        secureTextEntry
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+      />
+
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.replace("/login")}>
+        <Text style={styles.link}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-// 🏗️ Styles for the Login Screen
+// 🎨 Styles for the Registration Screen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -92,10 +105,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
   },
-  footerContainer: {
-    flex: 1 / 3,
-    position:"absolute",
-    bottom: 40,
-    alignItems: 'center',
-  }
 });

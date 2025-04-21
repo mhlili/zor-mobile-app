@@ -30,13 +30,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         },
         progressDot: {
-        width: 45,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: "#D9D9D9",
+        width: 32,
+        height: 15,
+        borderRadius: 15,
+        backgroundColor: "#2A2A2A",
         },
         activeDot: {
-        backgroundColor: "#666666",
+        backgroundColor: "#890FC1",
         },
 });
 

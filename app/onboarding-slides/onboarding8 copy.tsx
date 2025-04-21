@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ViewStyle, TextStyle, FlatList } from 'react-native';
-import Button from '@/components/onboarding/nextbutton';
+import Button from '@/components/onboarding/continueButton';
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   TextInput,
@@ -10,7 +10,7 @@ import { AntDesign } from "@expo/vector-icons"; // For back arrow
 import ProgressBar from '@/components/onboarding/progress-bar'; 
 
 
-export default function Onboarding7({ onNext}: { onNext: () => void }) { 
+export default function Onboarding8({ onNext}: { onNext: () => void }) { 
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -23,17 +23,17 @@ export default function Onboarding7({ onNext}: { onNext: () => void }) {
 
 
     const handleContinue = () => {
-    router.push("/onboarding-slides/onboarding8");
+    router.push("/onboarding-slides/onboarding7");
   };
 
   const handleSkip = () => {
-    router.push("/onboarding-slides/onboarding8");
+    router.push("/onboarding-slides/onboarding7");
   };
     
 
   return (
     <View style={styles.container}>
-      <ProgressBar activeIndex={4} totalDots={7} />
+      <ProgressBar activeIndex={5} totalDots={7} />
 
       <View style={styles.headerContainer}>
       {/* Back arrow button */}
@@ -50,20 +50,23 @@ export default function Onboarding7({ onNext}: { onNext: () => void }) {
     
     
       {/* Title & Instructions */}
-      <Text style={styles.title}>Your Metrics</Text>
+      <Text style={styles.title}>Do you have a caregiver?</Text>
       
       <Text style={styles.subtitle}>
-              Create a personalized metric to track alongside your seizure data. 
-              (ex. sleep quality, bowel movements, something unique to your experience). 
-              This custom data will appear on your charts, helping you identify patterns 
-              and correlations that matter to you.
+            A caregiver is a trusted individual who helps 
+            monitor and support you in managing seizures. 
+            Caregivers can be family members, friends, or healthcare providers.
             </Text>
-
+      
       
 
       <View style={styles.footerContainer}>
       <Button
-      theme="primary" label="Begin"
+      theme="primary" label="Yes, I have a caregiver"
+        onPress={handleContinue}
+        />
+        <Button
+      theme="primary" label="No, I do not a caregiver"
         onPress={handleContinue}
         />
       </View>

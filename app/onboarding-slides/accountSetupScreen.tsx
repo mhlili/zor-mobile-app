@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import Button from '@/components/onboarding/nextbutton';
-
+import Button from '@/components/onboarding/continueButton';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface SlideProps {
   //title: string;
@@ -12,46 +12,51 @@ interface SlideProps {
 
 export default function Onboarding1({ onNext}: { onNext: () => void }) {
   return (
+    <SafeAreaView style={styles.baseContainer}>
     <View style={styles.slide}>
       <View style={styles.titleContainer}>
       <Text style={styles.title}>Account created!</Text>
       <Text style={styles.text}>Now, let's get you{"\n"}set up.</Text>
       </View>
-      <View style={styles.footerContainer}>
-      <Button theme="primary" label="Continue"
+      </View>
+      <Button theme="primary" label="Get Started"
         onPress={onNext}
       />
-      </View>
       
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  slide: {
+  baseContainer: {
+    flex:1,
+    backgroundColor: '#161616'
+    },
+    slide: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#161616',
   },
   titleContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginHorizontal: 20,
-    marginTop: -400
+    marginTop: -450
     
   },
   title: {
-    fontSize: 27,
-    marginVertical: 15,
-    color: '#000000',
+    fontSize: 30,
+    marginVertical: 20,
+    color: '#FFF',
     textAlign: 'left',
+    fontWeight: "bold"
     
   },
   text: {
-    fontSize: 27,
+    fontSize: 30,
     textAlign: 'left',
-    color: '#A8A8A8',
+    color: '#BCBCBC',
   },
   footerContainer: {
     flex: 1 / 3,

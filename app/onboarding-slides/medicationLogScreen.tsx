@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ViewStyle, TextStyle, FlatList } from 'react-native';
-import Button from '@/components/onboarding/nextbutton';
+import Button from '@/components/onboarding/continueButton';
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   TextInput,
@@ -9,23 +9,25 @@ import { useRouter, useNavigation } from "expo-router";
 import { AntDesign } from "@expo/vector-icons"; // For back arrow
 import ProgressBar from '@/components/onboarding/progress-bar'; 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Onboarding5({ onNext}: { onNext: () => void }) { 
+
+export default function Onboarding6({ onNext}: { onNext: () => void }) { 
   const [searchText, setSearchText] = useState('');
   const [selectedMedications, setSelectedMedications] = useState<string[]>([]);
   const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({
-    Seizure: false,
-    PainRelief: false,
-    Antibiotics: false
+    "Seizure": false,
+    "Pain relief": false,  // Changed from PainRelief to "Pain relief"
+    "Antibiotics": false
   });
   const router = useRouter();
   const navigation = useNavigation();
 
   // **Medication Categories**
   const medicationCategories = {
-    Seizure: ["Diazepam", "Valproic acid", "Carbamazepine", "Lamotrigine", "Lorazepam", "Midazolam"],
-    PainRelief: ["Acetaminophen", "Aspirin", "Naproxen"],
-    Antibiotics: ["Amoxicillin", "Azithromycin", "Cephalexin", "Ciprofloxacin", "Metronidazole"]
+    "Seizure medication": ["Diazepam", "Valproic acid", "Carbamazepine", "Lamotrigine", "Lorazepam", "Midazolam", "Levetiracetam", "Lacoamide"],
+    "Pain relief medication": ["Acetaminophen", "Aspirin", "Naproxen"],
+    "Antibiotics": ["Amoxicillin", "Azithromycin", "Cephalexin", "Ciprofloxacin", "Metronidazole"]
   };
 
   // **Toggle View All**
@@ -45,7 +47,9 @@ export default function Onboarding5({ onNext}: { onNext: () => void }) {
 
   // **Filtered List for Search**
   const filterMedications = (medications: string[]) => {
-    return medications.filter(med => med.toLowerCase().includes(searchText.toLowerCase()));
+    return medications
+    .filter(med => med.toLowerCase().includes(searchText.toLowerCase()))
+    .filter(med => !selectedMedications.includes(med)); // This line excludes selected medications
   };
 
     useLayoutEffect(() => {
@@ -57,43 +61,52 @@ export default function Onboarding5({ onNext}: { onNext: () => void }) {
     const handleContinue = async () => {
       await AsyncStorage.setItem("medications", JSON.stringify(selectedMedications));
       console.log("Selected Medications:", selectedMedications);
-      router.push("/onboarding-slides/onboarding6");
+      router.push("/onboarding-slides/medicationDetailsScreen");
   };
 
   const handleSkip = () => {
     console.log("Skipped selection");
-    router.push("/onboarding-slides/onboarding6");
+    router.push("/onboarding-slides/medicationDetailsScreen");
   };
     
 
   return (
-    <View style={styles.container}>
-      <ProgressBar activeIndex={3} totalDots={7} />
+    <SafeAreaView style={styles.baseContainer}>
+      <View style={styles.progressBarContainer}>
+      <ProgressBar activeIndex={4} totalDots={10} />
+      </View>
+    <View style={styles.bodyContainer}>
 
-      <View style={styles.headerContainer}>
+    <View style={styles.navContainer}>
       {/* Back arrow button */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <AntDesign name="arrowleft" size={24} color="black" />
+              <AntDesign name="arrowleft" size={24} color="white" />
             </TouchableOpacity>
       
       {/* Skip button */}
       <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
               <Text style={styles.skipButtonText}>Add later</Text>
             </TouchableOpacity>
-
-      </View>
+            </View>
     
     
       {/* Title & Instructions */}
       <Text style={styles.title}>What medication do you take?</Text>
       
       {/* Search Bar */}
+      <View style={styles.searchBarContainer}>
+      <AntDesign name="search1" size={20} color="#BCBCBC" style={styles.searchIcon} />
       <TextInput
         style={styles.searchBar}
         placeholder="Search"
+        placeholderTextColor="#BCBCBC"
         value={searchText}
         onChangeText={setSearchText}
+        
       />
+
+      </View>
+      
 
       {/* Selected Medications at the Top */}
       <View style={styles.selectedContainer}>
@@ -109,6 +122,9 @@ export default function Onboarding5({ onNext}: { onNext: () => void }) {
         ))}
       </View>
 
+      {/* Horizontal line separator */}
+  <View style={styles.separator} />
+
       {/* Medication Sections */}
       {Object.entries(medicationCategories).map(([category, medications]) => {
         const filteredMeds = filterMedications(medications);
@@ -118,9 +134,11 @@ export default function Onboarding5({ onNext}: { onNext: () => void }) {
           <View key={category} style={styles.categoryContainer}>
             {/* Category Header */}
             <View style={styles.categoryHeader}>
-              <Text style={styles.categoryTitle}>{category} medication</Text>
+              <Text style={styles.categoryTitle}>{category}</Text>
               <TouchableOpacity onPress={() => toggleExpand(category)}>
-                <Text style={styles.viewAllText}>{isExpanded ? "Hide" : "View all"} ▼</Text>
+                <Text style={styles.viewAllText}>{isExpanded ? "Hide " : "View all "} 
+                  <AntDesign name="down" size={12}/>
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -149,26 +167,36 @@ export default function Onboarding5({ onNext}: { onNext: () => void }) {
           </View>
         );
       })}
-
-      <View style={styles.footerContainer}>
+      </View>
+      
       <Button
       theme="primary" label="Continue"
         onPress={handleContinue}
         />
-      </View>
-      
-    </View>
+      </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 40,
-    backgroundColor: "#fff",
+  baseContainer: {
+    flex:1,
+  backgroundColor: '#161616'
   },
-    headerContainer: {
+  progressBarContainer: {
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    backgroundColor: "#161616",
+    },
+  bodyContainer: {
+      flex: 1,
+      paddingHorizontal: 20,
+      paddingTop: 5,
+      backgroundColor: "#161616",
+    },
+  backButton: {
+    marginBottom: 0,
+  },
+    navContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between', // Places buttons at opposite ends
       alignItems: 'center', // Ensures vertical alignment
@@ -176,41 +204,58 @@ const styles = StyleSheet.create({
     },
   skipButtonText: {
     fontSize: 16,
-    color: '#585858',
-    textDecorationLine: 'underline',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginBottom: 20,
-    gap: 10
+    color: '#BCBCBC',
   },
   searchBar: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#F0F0F0",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    backgroundColor: "#fff",
-    marginBottom: 15,
-  },
-  selectedContainer: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10 },
-  selectedMedicationButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#BABABA', borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6, margin: 5 },
-  selectedMedicationButtonText: { fontSize: 16, color: '#fff', marginLeft: 6 },
-  categoryContainer: { marginBottom: 15 },
-  categoryHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 },
-  categoryTitle: { fontSize: 16, fontWeight: '600', color: '#666' },
-  viewAllText: { fontSize: 14, color: '#888' },
-  medicationButton: { backgroundColor: '#F3F3F3', borderRadius: 10, paddingHorizontal: 10, paddingVertical: 8, margin: 5 },
-  medicationButtonText: { fontSize: 16, color: '#000' },
-  closeIcon: {
+    flex: 1,
+    color: "#EAEAEA",
+    fontWeight: "bold",
     fontSize: 16,
-    color: '#FFFFFF',
-    marginRight: 5, // Add space between text and 'X'
+    height: '100%'
   },
-  backButton: {
-    padding: 0
+  selectedContainer: { 
+    flexDirection: 'row', 
+    flexWrap: 'wrap' },
+  selectedMedicationButton: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: '#C080DE', 
+    borderRadius: 10, 
+    paddingHorizontal: 8,
+    paddingVertical: 8, 
+    margin: 5
+   },
+  selectedMedicationButtonText: { 
+    fontSize: 14, 
+    color: '#fff', 
+    marginLeft: 6 },
+  categoryContainer: { marginBottom: 15 },
+  categoryHeader: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginBottom: 5 },
+  categoryTitle: {
+    fontSize: 13,
+    color: "#BCBCBC",
+  },
+  viewAllText: { 
+    fontSize: 13, 
+    color: '#BCBCBC' },
+  medicationButton: { 
+    backgroundColor: '#3A3A3A', 
+    borderRadius: 10, 
+    paddingHorizontal: 10, 
+    paddingVertical: 8, 
+    margin: 4,
+  marginLeft: 1 },
+  medicationButtonText: { 
+    fontSize: 14, 
+    color: '#fff' },
+  closeIcon: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    marginRight: 1, // Add space between text and 'X'
   },
   skipButton: {
     padding: 0
@@ -219,12 +264,26 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
+    color: '#FFF'
   },
-  footerContainer: {
-    flex: 1 / 3,
-    position:"absolute",
-    bottom: 40,
+  separator: {
+    height: 1,
+    backgroundColor: '#3A3A3A', // Dark gray color to match the UI
+    width: '100%',
+    marginVertical: 10, // Add some vertical spacing
+  },
+  searchBarContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 25,
-  }
+    borderWidth: 1,
+    borderColor: '#303030',
+    borderRadius: 10,
+    backgroundColor: '#222222',
+    paddingHorizontal: 10,
+    height: 45,
+    marginBottom: 10,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
 });

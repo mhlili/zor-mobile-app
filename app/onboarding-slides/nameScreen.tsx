@@ -8,11 +8,13 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons"; // For back arrow
-import Button from '@/components/onboarding/nextbutton';
+import Button from '@/components/onboarding/continueButton';
 import ProgressBar from '@/components/onboarding/progress-bar'; 
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
-export default function Onboarding2({ onNext}: { onNext: () => void }) {
+
+export default function Onboarding2({ onNext, onBack}: { onNext: () => void, onBack: () => void }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [preferredName, setPreferredName] = useState("");
@@ -25,18 +27,21 @@ export default function Onboarding2({ onNext}: { onNext: () => void }) {
       console.log("First Name:", firstName);
       console.log("Last Name:", lastName);
       console.log("Preferred Name:", preferredName);
-      router.push("/onboarding-slides/onboarding3"); // Navigate to the next registration step
+      router.push("/onboarding-slides/bdayScreen"); // Navigate to the next registration step
     }
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.baseContainer}>
+    <View style={styles.progressBarContainer}>
       {/* Progress Bar */}
-      <ProgressBar activeIndex={0} totalDots={7} />
+      <ProgressBar activeIndex={0} totalDots={10} />
+    </View>
 
+    <View style={styles.bodyContainer}>
       {/* Back Button */}
-      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <AntDesign name="arrowleft" size={24} color="black" />
+      <TouchableOpacity onPress={(onBack)} style={styles.backButton}>
+        <AntDesign name="arrowleft" size={24} color="#FFF" />
       </TouchableOpacity>
 
       {/* Title & Instructions */}
@@ -46,17 +51,27 @@ export default function Onboarding2({ onNext}: { onNext: () => void }) {
         <Text style={styles.italicText}>Only clinicians will see this.</Text>
       </Text>
 
+      <Text style={styles.inputHeadertext}>
+        First Name
+      </Text>
+
       {/* Input Fields */}
       <TextInput
         style={styles.input}
         placeholder="First name"
+        placeholderTextColor="#BCBCBC"
         value={firstName}
         onChangeText={setFirstName}
       />
 
+      <Text style={styles.inputHeadertext}>
+        Last Name
+      </Text>
+
       <TextInput
         style={styles.input}
         placeholder="Last name"
+        placeholderTextColor="#BCBCBC"
         value={lastName}
         onChangeText={setLastName}
       />
@@ -65,15 +80,20 @@ export default function Onboarding2({ onNext}: { onNext: () => void }) {
         What name should we address you by? We’ll use this name if we email you.
       </Text>
 
+      <Text style={styles.inputHeadertext}>
+        Preferred Name
+      </Text>
+
       <TextInput
         style={styles.input}
-        placeholder="Preferred name"
+        placeholder="Optional"
+        placeholderTextColor="#BCBCBC"
         value={preferredName}
         onChangeText={setPreferredName}
       />
 
       {/* Continue Button */}
-      <View style={styles.footerContainer}>
+      </View>
       <Button
       theme="primary" label="Continue"
         //style={[styles.button, !isFormValid && styles.buttonDisabled]}
@@ -81,50 +101,73 @@ export default function Onboarding2({ onNext}: { onNext: () => void }) {
         //disabled={!isFormValid}
         onPress={handleContinue}
         />
-      </View>
       
-    </View>
+    
+    </SafeAreaView>
   );
 }
 
 // 🎨 Styles
 const styles = StyleSheet.create({
-  container: {
+  baseContainer: {
+    flex:1,
+    backgroundColor: '#161616'
+    },
+  progressBarContainer: {
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    backgroundColor: "#161616",
+    },
+  bodyContainer: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 40,
-    backgroundColor: "#fff",
+    paddingTop: 5,
+    backgroundColor: "#161616",
   },
   backButton: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
+    marginTop: 30,
+    color: "#FFF"
   },
   subtitle: {
     fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
+    color: "#DDD",
+    marginBottom: 25,
+    fontWeight: "bold"
+  },
+  inputHeadertext: {
+    fontSize: 12,
+    color: "#676767",
+    marginBottom: 8,
+    fontWeight: "bold"
   },
   italicText: {
     fontStyle: "italic",
   },
   input: {
     width: "100%",
-    height: 50,
+    height: 45,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#303030",
     borderRadius: 10,
     paddingHorizontal: 15,
-    backgroundColor: "#F5F5F5",
-    marginBottom: 15,
+    backgroundColor: "#222222",
+    marginBottom: 10,
+    color: "#EAEAEA",
+    fontWeight: "bold",
+    fontSize: 16
   },
   smallText: {
     fontSize: 14,
-    color: "#666",
-    marginBottom: 10,
+    color: "#DDD",
+    marginBottom: 15,
+    marginTop: 15,
+    fontWeight: "bold"
   },
   buttonDisabled: {
     backgroundColor: "#E0E0E0",
@@ -137,7 +180,7 @@ const styles = StyleSheet.create({
   footerContainer: {
     flex: 1 / 3,
     position:"absolute",
-    bottom: 40,
+    bottom: 0,
     alignItems: 'center',
     paddingHorizontal: 25,
   }
