@@ -15,6 +15,7 @@ import SleepDetails from "./detail-screens/sleepDetails";
 import StressDetails from "./detail-screens/stressDetails";
 import { formatDate } from "@/utils/formatDate";
 import { Feather } from "@expo/vector-icons";
+import { ProgressBar } from "@/components/ProgressBar";
 
 interface DayDetailProps {
   visible: boolean;
@@ -22,64 +23,34 @@ interface DayDetailProps {
   date: string;
 }
 
-// Progress bar component
-interface ProgressBarProps {
-  value: number;
-  max: number;
-  labels: {
-    left: string;
-    right: string;
-  };
-}
+type DetailScreen = "seizures" | "medication" | "sleep" | "stress" | "appetite";
 
 const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
-  const [seizuresDetailVisible, setSeizuresDetailVisible] = useState(false);
-  const [medicationDetailVisible, setMedicationDetailVisible] = useState(false);
-  const [sleepDetailVisible, setSleepDetailVisible] = useState(false);
-  const [stressDetailVisible, setStressDetailVisible] = useState(false);
-  const [appetiteDetailVisible, setAppetiteDetailVisible] = useState(false);
+  const [activeDetail, setActiveDetail] = useState<DetailScreen | null>(null);
 
   // Sample medication data
   const medications = [
-    { name: "Ibuprofen", dosage: "1500mg", total: "500 mg", taken: true },
-    { name: "Tegretol", dosage: "1000mg", ratio: "0/1", taken: false },
+    {
+      name: "Tegretol",
+      dosage: "1000mg",
+      frequency: "Once a day",
+      status: "1/1",
+    },
+    {
+      name: "Ibuprofen",
+      dosage: "200mg",
+      frequency: "As needed",
+      status: "2",
+    },
   ];
 
-  const ProgressBar = ({ value, max, labels }: ProgressBarProps) => {
-    const percentage = (value / max) * 100;
-
-    return (
-      <View style={styles.progressContainer}>
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: `${percentage}%` }]} />
-        </View>
-        <View style={styles.progressLabels}>
-          <Text style={styles.progressLabelLeft}>{labels.left}</Text>
-          <Text style={styles.progressLabelRight}>{labels.right}</Text>
-        </View>
-      </View>
-    );
-  };
-
   // Handle card taps
-  const handleSeizuresTap = () => {
-    setSeizuresDetailVisible(true);
+  const handleDetailTap = (screen: DetailScreen) => {
+    setActiveDetail(screen);
   };
 
-  const handleMedicationTap = () => {
-    setMedicationDetailVisible(true);
-  };
-
-  const handleSleepTap = () => {
-    setSleepDetailVisible(true);
-  };
-
-  const handleStressTap = () => {
-    setStressDetailVisible(true);
-  };
-
-  const handleAppetiteTap = () => {
-    setAppetiteDetailVisible(true);
+  const handleCloseDetail = () => {
+    setActiveDetail(null);
   };
 
   return (
@@ -96,7 +67,7 @@ const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
             <View style={styles.header}>
               <Text style={styles.headerText}>{formatDate(date)}</Text>
               <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <X width={24} height={24} color="#000" />
+                <X width={24} height={24} color="#fff" />
               </TouchableOpacity>
             </View>
 
@@ -108,12 +79,12 @@ const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
                 <TouchableOpacity
                   style={styles.seizureCard}
                   activeOpacity={0.7}
-                  onPress={handleSeizuresTap}
+                  onPress={() => handleDetailTap("seizures")}
                 >
                   <Text style={styles.seizureCount}>1</Text>
                   <TouchableOpacity
                     style={styles.expandButton}
-                    onPress={handleSeizuresTap}
+                    onPress={() => handleDetailTap("seizures")}
                   >
                     <Feather name="maximize-2" size={20} color="#999" />
                   </TouchableOpacity>
@@ -130,17 +101,15 @@ const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
                         index < medications.length - 1 &&
                           styles.medicationItemBorder,
                       ]}
-                      onPress={handleMedicationTap}
+                      onPress={() => handleDetailTap("medication")}
                     >
                       <View style={styles.medicationLeft}>
                         <Text style={styles.medicationName}>{med.name}</Text>
                         <Text style={styles.medicationDosage}>
-                          {med.dosage}
+                          {med.dosage} • {med.frequency}
                         </Text>
                       </View>
-                      <Text style={styles.medicationStatus}>
-                        {med.total || med.ratio}
-                      </Text>
+                      <Text style={styles.medicationStatus}>{med.status}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -152,45 +121,60 @@ const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
                 <TouchableOpacity
                   style={styles.metricCard}
                   activeOpacity={0.7}
-                  onPress={handleSleepTap}
+                  onPress={() => handleDetailTap("sleep")}
                 >
                   <Text style={styles.metricTitle}>Sleep</Text>
-                  <Text style={styles.metricValue}>8</Text>
-                  <ProgressBar
-                    value={8}
-                    max={12}
-                    labels={{ left: "1 hour", right: "12+ hours" }}
-                  />
+                  <View style={styles.metricRow}>
+                    <Text style={styles.metricValue}>8</Text>
+                    <View style={styles.progressWrapper}>
+                      <ProgressBar
+                        value={8}
+                        max={12}
+                        labels={{ left: "1 hour", right: "12+ hours" }}
+                      />
+                    </View>
+                  </View>
                 </TouchableOpacity>
 
                 {/* Stress Card */}
                 <TouchableOpacity
                   style={styles.metricCard}
                   activeOpacity={0.7}
-                  onPress={handleStressTap}
+                  onPress={() => handleDetailTap("stress")}
                 >
                   <Text style={styles.metricTitle}>Stress</Text>
-                  <Text style={styles.metricValue}>3</Text>
-                  <ProgressBar
-                    value={3}
-                    max={10}
-                    labels={{ left: "Not stressed", right: "Very stressed" }}
-                  />
+                  <View style={styles.metricRow}>
+                    <Text style={styles.metricValue}>3</Text>
+                    <View style={styles.progressWrapper}>
+                      <ProgressBar
+                        value={3}
+                        max={5}
+                        labels={{
+                          left: "Not stressed",
+                          right: "Very stressed",
+                        }}
+                      />
+                    </View>
+                  </View>
                 </TouchableOpacity>
 
                 {/* Appetite Card */}
                 <TouchableOpacity
                   style={styles.metricCard}
                   activeOpacity={0.7}
-                  onPress={handleAppetiteTap}
+                  onPress={() => handleDetailTap("appetite")}
                 >
                   <Text style={styles.metricTitle}>Appetite</Text>
-                  <Text style={styles.metricValue}>5</Text>
-                  <ProgressBar
-                    value={5}
-                    max={10}
-                    labels={{ left: "Not hungry", right: "Very hungry" }}
-                  />
+                  <View style={styles.metricRow}>
+                    <Text style={styles.metricValue}>5</Text>
+                    <View style={styles.progressWrapper}>
+                      <ProgressBar
+                        value={5}
+                        max={5}
+                        labels={{ left: "Not hungry", right: "Very hungry" }}
+                      />
+                    </View>
+                  </View>
                 </TouchableOpacity>
               </View>
             </ScrollView>
@@ -199,32 +183,32 @@ const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
 
         {/* Detail Screens */}
         <SeizuresDetails
-          visible={seizuresDetailVisible}
-          onClose={() => setSeizuresDetailVisible(false)}
+          visible={activeDetail === "seizures"}
+          onClose={handleCloseDetail}
           date={date}
         />
 
         <MedicationDetails
-          visible={medicationDetailVisible}
-          onClose={() => setMedicationDetailVisible(false)}
+          visible={activeDetail === "medication"}
+          onClose={handleCloseDetail}
           date={date}
         />
 
         <SleepDetails
-          visible={sleepDetailVisible}
-          onClose={() => setSleepDetailVisible(false)}
+          visible={activeDetail === "sleep"}
+          onClose={handleCloseDetail}
           date={date}
         />
 
         <StressDetails
-          visible={stressDetailVisible}
-          onClose={() => setStressDetailVisible(false)}
+          visible={activeDetail === "stress"}
+          onClose={handleCloseDetail}
           date={date}
         />
 
         <AppetiteDetails
-          visible={appetiteDetailVisible}
-          onClose={() => setAppetiteDetailVisible(false)}
+          visible={activeDetail === "appetite"}
+          onClose={handleCloseDetail}
           date={date}
         />
       </Modal>
@@ -235,13 +219,13 @@ const DayDetailModal = ({ visible, onClose, date }: DayDetailProps) => {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "flex-end",
     alignItems: "center",
   },
   modalContainer: {
     width: "100%",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#161616",
     borderRadius: 20,
     overflow: "hidden",
     maxHeight: "90%",
@@ -252,13 +236,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
     position: "relative",
+    backgroundColor: "#222",
   },
   headerText: {
     fontSize: 18,
-    fontWeight: "600",
+    color: "#fff",
   },
   closeButton: {
     position: "absolute",
@@ -270,46 +253,37 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    color: "#999",
+    color: "#676767",
     marginTop: 16,
-    marginBottom: 8,
+    marginBottom: 16,
   },
   seizureCard: {
-    backgroundColor: "white",
+    backgroundColor: "#222",
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    height: 120,
+    height: 140,
   },
   seizureCount: {
-    fontSize: 72,
+    fontSize: 54,
     fontWeight: "bold",
+    color: "#fff",
   },
   expandButton: {
     position: "absolute",
     top: 16,
     right: 16,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#333",
     borderRadius: 20,
     padding: 8,
   },
   medicationCard: {
-    backgroundColor: "white",
+    backgroundColor: "#222",
     borderRadius: 16,
     marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
     overflow: "hidden",
   },
   medicationItem: {
@@ -320,77 +294,49 @@ const styles = StyleSheet.create({
   },
   medicationItemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#333",
   },
   medicationLeft: {
     flex: 1,
   },
-  medicationContent: {
-    marginTop: 16,
-  },
   medicationName: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
+    color: "#fff",
   },
   medicationDosage: {
-    fontSize: 20,
-    color: "#ccc",
+    fontSize: 15,
+    color: "#CBCBCB",
     marginTop: 4,
   },
   medicationStatus: {
     fontSize: 16,
-    color: "#999",
+    color: "#fff",
   },
   metricCard: {
-    backgroundColor: "white",
+    backgroundColor: "#222",
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
   },
   metricTitle: {
-    fontSize: 16,
-    color: "#999",
+    fontSize: 14,
+    color: "#676767",
     marginBottom: 8,
   },
+  metricRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
+  },
   metricValue: {
-    fontSize: 36,
-    fontWeight: "bold",
-    marginBottom: 16,
+    fontSize: 28,
+    color: "#fff",
+    width: 50,
+    textAlign: "center",
   },
   progressWrapper: {
     flex: 1,
-    marginLeft: 16,
-  },
-  progressContainer: {
-    width: "100%",
-  },
-  progressBar: {
-    height: 8,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 4,
-    overflow: "hidden",
-  },
-  progressFill: {
-    height: "100%",
-    backgroundColor: "#b0b0b0",
-  },
-  progressLabels: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 4,
-  },
-  progressLabelLeft: {
-    fontSize: 12,
-    color: "#999",
-  },
-  progressLabelRight: {
-    fontSize: 12,
-    color: "#999",
   },
 });
 

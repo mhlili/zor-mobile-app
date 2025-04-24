@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
 
-export default function QA() {
+export default function Forum() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Q&A</Text>
+      <Text style={styles.title}>Forum</Text>
     </View>
   );
 }

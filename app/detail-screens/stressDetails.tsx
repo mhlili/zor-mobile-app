@@ -11,6 +11,7 @@ import {
 import { X } from "react-native-feather";
 import { formatDate } from "../../utils/formatDate";
 import StressEditScreen, { StressData } from "../edit-screens/stressEditScreen";
+import { ProgressBar } from "@/components/ProgressBar";
 
 interface StressDetailProps {
   visible: boolean;
@@ -47,7 +48,7 @@ const StressDetails = ({ visible, onClose, date }: StressDetailProps) => {
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Stress</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <X width={24} height={24} color="#000" />
+            <X width={24} height={24} color="#fff" />
           </TouchableOpacity>
         </View>
 
@@ -62,6 +63,16 @@ const StressDetails = ({ visible, onClose, date }: StressDetailProps) => {
           <View style={styles.mainContent}>
             <Text style={styles.largeNumber}>{stressData.level}</Text>
             <Text style={styles.subtitleText}>Stressed</Text>
+            <View style={styles.progressContainer}>
+              <ProgressBar
+                value={parseInt(stressData.level)}
+                max={5}
+                labels={{
+                  left: "Not stressed",
+                  right: "Very stressed",
+                }}
+              />
+            </View>
           </View>
 
           {/* Details section */}
@@ -100,18 +111,19 @@ const StressDetails = ({ visible, onClose, date }: StressDetailProps) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#222",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#333",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    color: "#fff",
   },
   editButton: {
     paddingVertical: 8,
@@ -119,7 +131,7 @@ const styles = StyleSheet.create({
   },
   editText: {
     fontSize: 16,
-    color: "#666",
+    color: "#B1B1B1",
   },
   closeButton: {
     padding: 4,
@@ -132,53 +144,83 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 16,
-    color: "#999",
+    color: "#676767",
+    marginTop: 10,
   },
   scrollView: {
     flex: 1,
   },
   mainContent: {
     alignItems: "center",
-    paddingVertical: 40,
+    width: "100%",
+    marginBottom: 30,
+    backgroundColor: "#222",
   },
   largeNumber: {
-    fontSize: 72,
+    fontSize: 54,
     fontWeight: "bold",
+    color: "#fff",
   },
   subtitleText: {
     fontSize: 18,
     color: "#ccc",
-    marginTop: 4,
+  },
+  progressContainer: {
+    width: "100%",
+    paddingHorizontal: 20,
+    marginTop: 20,
   },
   detailsSection: {
+    flex: 1,
+    minHeight: "100%",
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingTop: 25,
+    backgroundColor: "#161616",
   },
   sectionTitle: {
-    fontSize: 18,
-    color: "#666",
+    fontSize: 16,
+    color: "#676767",
     marginBottom: 16,
   },
   detailCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#222",
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#eee",
     overflow: "hidden",
+  },
+  chevron: {
+    transform: [{ rotate: "0deg" }],
+  },
+  chevronExpanded: {
+    transform: [{ rotate: "180deg" }],
+  },
+  dropdownRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#333",
+  },
+  dropdownText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#fff",
   },
   detailRow: {
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#333",
   },
   detailLabel: {
     fontSize: 14,
-    color: "#999",
+    color: "#676767",
     marginBottom: 4,
   },
   detailValue: {
     fontSize: 16,
+    color: "#EAEAEA",
   },
   notesContainer: {
     padding: 16,
@@ -186,6 +228,7 @@ const styles = StyleSheet.create({
   notesText: {
     fontSize: 16,
     lineHeight: 24,
+    color: "#EAEAEA",
   },
 });
 

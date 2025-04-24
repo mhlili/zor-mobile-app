@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { MoreVertical } from "react-native-feather";
+import { Minus, Plus } from "react-native-feather";
 import OptionsMenu from "./optionsMenu";
 
 export interface SleepData {
@@ -52,7 +52,22 @@ const SleepEditScreen = ({
   };
 
   const handleDeleteSleep = () => {
-    // Handle delete logic here
+    setOptionsVisible(false);
+    onClose();
+  };
+
+  const incrementHours = () => {
+    const currentHours = parseInt(hours);
+    if (!isNaN(currentHours) && currentHours < 24) {
+      setHours((currentHours + 1).toString());
+    }
+  };
+
+  const decrementHours = () => {
+    const currentHours = parseInt(hours);
+    if (!isNaN(currentHours) && currentHours > 0) {
+      setHours((currentHours - 1).toString());
+    }
   };
 
   return (
@@ -85,46 +100,40 @@ const SleepEditScreen = ({
             </View>
 
             <ScrollView style={styles.scrollView}>
-              {/* Main content */}
-              <View style={styles.mainContent}>
-                <Text style={styles.largeNumber}>{hours}</Text>
-                <Text style={styles.subtitleText}>Hours</Text>
-              </View>
-
-              {/* Form */}
-              <View style={styles.formContainer}>
-                <View style={styles.formRow}>
-                  <View style={styles.formHeader}>
-                    <Text style={styles.formTitle}>Sleep</Text>
+              {/* Hours of sleep */}
+              <View style={styles.section}>
+                <Text style={styles.sectionLabel}>Hours of sleep</Text>
+                <View style={styles.hoursInputContainer}>
+                  <Text style={styles.hoursInput}>{hours}</Text>
+                  <View style={styles.hoursControls}>
                     <TouchableOpacity
-                      style={styles.optionsButton}
-                      onPress={() => setOptionsVisible(true)}
+                      style={styles.controlButton}
+                      onPress={decrementHours}
                     >
-                      <MoreVertical width={24} height={24} color="#000" />
+                      <Minus width={20} height={20} color="#fff" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.controlButton, styles.plusButton]}
+                      onPress={incrementHours}
+                    >
+                      <Plus width={20} height={20} color="#fff" />
                     </TouchableOpacity>
                   </View>
-
-                  {/* Hours */}
-                  <Text style={styles.inputLabel}>Hours</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={hours}
-                    onChangeText={setHours}
-                    placeholder="Enter hours"
-                    keyboardType="numeric"
-                  />
-
-                  {/* Notes */}
-                  <Text style={styles.inputLabel}>Notes</Text>
-                  <TextInput
-                    style={[styles.input, styles.notesInput]}
-                    value={notes}
-                    onChangeText={setNotes}
-                    placeholder="Enter notes"
-                    multiline
-                    textAlignVertical="top"
-                  />
                 </View>
+              </View>
+
+              {/* Notes */}
+              <View style={styles.section}>
+                <Text style={styles.sectionLabel}>Notes</Text>
+                <TextInput
+                  style={styles.notesInput}
+                  value={notes}
+                  onChangeText={setNotes}
+                  placeholder="Enter notes"
+                  placeholderTextColor="#666"
+                  multiline
+                  textAlignVertical="top"
+                />
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
@@ -145,7 +154,7 @@ const SleepEditScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#222",
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -160,6 +169,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
+    color: "#fff",
   },
   cancelButton: {
     fontSize: 18,
@@ -168,72 +178,71 @@ const styles = StyleSheet.create({
   saveButton: {
     fontSize: 18,
     fontWeight: "500",
+    color: "#F36AFF",
   },
   dateContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingBottom: 16,
+    paddingTop: 16,
+    paddingBottom: 40,
+    backgroundColor: "#161616",
   },
   dateText: {
     fontSize: 16,
-    color: "#999",
-  },
-  yearText: {
-    fontSize: 16,
-    color: "#999",
+    color: "#676767",
   },
   scrollView: {
     flex: 1,
-  },
-  mainContent: {
-    alignItems: "center",
-    paddingVertical: 40,
-  },
-  largeNumber: {
-    fontSize: 72,
-    fontWeight: "bold",
-  },
-  subtitleText: {
-    fontSize: 18,
-    color: "#ccc",
-    marginTop: 4,
-  },
-  formContainer: {
     paddingHorizontal: 20,
+    backgroundColor: "#161616",
   },
-  formRow: {
-    marginBottom: 20,
+  section: {
+    marginBottom: 24,
   },
-  formHeader: {
+  sectionLabel: {
+    fontSize: 14,
+    color: "#676767",
+    marginBottom: 8,
+  },
+  hoursInputContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
+    backgroundColor: "#222222",
+    borderRadius: 12,
+    paddingLeft: 20,
+    paddingRight: 8,
+    paddingVertical: 12,
   },
-  formTitle: {
+  hoursInput: {
     fontSize: 20,
-    fontWeight: "600",
+    color: "#fff",
   },
-  optionsButton: {
-    padding: 8,
+  hoursControls: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  inputLabel: {
-    fontSize: 16,
-    color: "#999",
-    marginBottom: 8,
+  controlButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#333333",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 8,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
+  plusButton: {
+    backgroundColor: "#444444",
+  },
+  notesInput: {
+    backgroundColor: "#222222",
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
-    marginBottom: 20,
-  },
-  notesInput: {
-    height: 150,
-    paddingTop: 16,
+    color: "#fff",
+    minHeight: 100,
+    textAlignVertical: "top",
   },
 });
 

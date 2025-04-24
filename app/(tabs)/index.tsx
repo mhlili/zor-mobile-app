@@ -42,7 +42,7 @@ export default function Home() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+        <StatusBar barStyle="light-content" />
 
         {/* Header */}
         <View style={styles.header}>
@@ -58,7 +58,7 @@ export default function Home() {
         {/* Seizure Frequency */}
         <View style={styles.frequencyContainer}>
           <Text style={styles.frequencyText}>
-            You tend to have a seizure every 15 days
+            You tend to have a seizure every <Text style={styles.highlightText}>15 days</Text>
           </Text>
         </View>
 
@@ -70,17 +70,32 @@ export default function Home() {
             <Calendar
               onDayPress={handleDayPress}
               markedDates={{
-                [selectedDate]: { selected: true, marked: true, selectedColor: "#D1D1D1" },
+                [selectedDate]: { selected: true, marked: true, selectedColor: "#890fc1" },
                 [today]: { selected: true, selectedColor: "#D1D1D1" },
               }}
               theme={{
-                backgroundColor: '#f9f9f9',
-                calendarBackground: '#f9f9f9',
-                textSectionTitleColor: "#333",
-                textDayFontSize: 14,
+                backgroundColor: '#161616',
+                calendarBackground: '#1B1B1B',
+                textSectionTitleColor: '#999',
+                textSectionTitleDisabledColor: '#666',
+                selectedDayBackgroundColor: '#890fc1',
+                selectedDayTextColor: '#ffffff',
+                todayTextColor: '#ffffff',
+                todayBackgroundColor: '#3A3A3A',
+                dayTextColor: '#ffffff',
+                textDisabledColor: '#666',
+                dotColor: '#999',
+                selectedDotColor: '#494949',
+                arrowColor: '#999',
+                disabledArrowColor: '#666',
+                monthTextColor: '#ffffff',
+                indicatorColor: '#890fc1',
                 textDayFontWeight: '300',
-                todayTextColor: "#000",
-                selectedDayTextColor: '#000',
+                textMonthFontWeight: 'bold',
+                textDayHeaderFontWeight: '300',
+                textDayFontSize: 16,
+                textMonthFontSize: 16,
+                textDayHeaderFontSize: 14
               }}
               renderHeader={(date: any) => {
                 return (
@@ -136,7 +151,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#1B1B1B'
   },
   header: {
     flexDirection: 'row',
@@ -157,26 +172,32 @@ const styles = StyleSheet.create({
   },
   counterNumber: {
     fontSize: 72,
-    fontWeight: 'bold',
+    fontWeight: 'semibold',
+    color: '#ffffff',
   },
   counterText: {
     fontSize: 18,
-    color: '#666',
+    color: '#BCBCBC',
     marginTop: -5,
   },
   frequencyContainer: {
+    backgroundColor: '#1B1B1B',
     marginTop: 20,
     marginBottom: 15,
     marginHorizontal: 20,
     padding: 15,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#eee',
+    borderWidth: 0.4,
+    borderColor: '#676767',
     alignItems: 'center',
   },
   frequencyText: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: 15,
+    color: '#676767',
+  },
+  highlightText: {
+    color: '#676767',
+    fontWeight: 'bold',
   },
   scrollView: {
     flex: 1,
@@ -186,15 +207,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingTop: 30,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#161616',
   },
   sectionTitle: {
-    fontSize: 18,
-    color: '#666',
+    fontSize: 14,
+    color: '#676767',
     marginBottom: 10,
   },
   calendarContainer: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#1B1B1B',
     borderRadius: 20,
     padding: 5,
   },
@@ -213,18 +234,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'left',
+    color: '#fff',
   },
   expandButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#333333',
     justifyContent: 'center',
     alignItems: 'center',
   },
   tasksContainer: {
     marginTop: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#161616',
   },
   taskRow: {
     flexDirection: 'row',
@@ -232,17 +254,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#333333',
   },
   taskText: {
     fontSize: 16,
+    color: '#ffffff',
   },
   checkbox: {
     width: 24,
     height: 24,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#666666',
     justifyContent: 'center',
     alignItems: 'center',
   },
