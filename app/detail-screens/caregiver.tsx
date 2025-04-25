@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 
 type Caregiver = {
   name: string;
@@ -25,17 +24,15 @@ export default function CaregiverScreen() {
   const router = useRouter();
   const [caregivers, setCaregivers] = useState<Caregiver[]>([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const loadData = async () => {
-        const stored = await AsyncStorage.getItem('caregivers');
-        if (stored) {
-          setCaregivers(JSON.parse(stored));
-        }
-      };
-      loadData();
-    }, [])
-  );
+  useEffect(() => {
+    const loadData = async () => {
+      const stored = await AsyncStorage.getItem('caregivers');
+      if (stored) {
+        setCaregivers(JSON.parse(stored));
+      }
+    };
+    loadData();
+  }, []);
 
   const handleDelete = (index: number) => {
     Alert.alert('Remove Caregiver', 'Are you sure you want to delete this caregiver?', [

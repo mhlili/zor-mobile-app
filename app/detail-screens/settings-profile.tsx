@@ -9,25 +9,22 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 
 export default function SettingsProfileScreen() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const loadData = async () => {
-        const storedName = await AsyncStorage.getItem('name');
-        const storedEmail = await AsyncStorage.getItem('email');
+  useEffect(() => {
+    const loadData = async () => {
+      const storedName = await AsyncStorage.getItem('name');
+      const storedEmail = await AsyncStorage.getItem('email');
 
-        if (storedName) setName(storedName);
-        if (storedEmail) setEmail(storedEmail);
-      };
-      loadData();
-    }, [])
-  );
+      if (storedName) setName(storedName);
+      if (storedEmail) setEmail(storedEmail);
+    };
+    loadData();
+  }, []);
 
   // Save to AsyncStorage on every change
   const updateName = async (value: string) => {

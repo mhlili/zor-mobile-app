@@ -10,9 +10,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { useRouter } from 'expo-router';
+import { useRouter, useNavigation } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 
 type Medication = {
   id: string;
@@ -34,6 +33,7 @@ type Metric = {
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const [name, setName] = useState('');
   const [imageUri, setImageUri] = useState('https://via.placeholder.com/100');
   const [joinDate] = useState(
@@ -44,26 +44,28 @@ export default function ProfileScreen() {
   const [caregivers, setCaregivers] = useState<Caregiver[]>([]);
   const [metrics, setMetrics] = useState<Metric[]>([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const loadData = async () => {
-        const storedName = await AsyncStorage.getItem('name');
-        const storedMedications = await AsyncStorage.getItem('medications');
-        const storedCaregivers = await AsyncStorage.getItem('caregivers');
-        const storedMetrics = await AsyncStorage.getItem('myMetrics');
-        const storedImage = await AsyncStorage.getItem('profileImage');
+  useEffect(() => {
+    const loadData = async () => {
+      const storedName = await AsyncStorage.getItem('name');
+      const storedMedications = await AsyncStorage.getItem('medications');
+      const storedCaregivers = await AsyncStorage.getItem('caregivers');
+      const storedMetrics = await AsyncStorage.getItem('myMetrics');
+      const storedImage = await AsyncStorage.getItem('profileImage');
 
-        setName(storedName || 'Abby Smith');
-        if (storedImage) setImageUri(storedImage);
+      setName(storedName || 'Abby Smith');
+      if (storedImage) setImageUri(storedImage);
 
-        setMedications(storedMedications ? JSON.parse(storedMedications) : []);
-        setCaregivers(storedCaregivers ? JSON.parse(storedCaregivers) : []);
-        setMetrics(storedMetrics ? JSON.parse(storedMetrics) : []);
-      };
+      setMedications(storedMedications ? JSON.parse(storedMedications) : []);
+      setCaregivers(storedCaregivers ? JSON.parse(storedCaregivers) : []);
+      setMetrics(storedMetrics ? JSON.parse(storedMetrics) : []);
+    };
 
-      loadData();
-    }, [])
-  );
+    loadData();
+
+    const unsubscribe = navigation.addListener('focus', loadData);
+
+    return unsubscribe;
+  }, [navigation]);
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -107,8 +109,8 @@ export default function ProfileScreen() {
       <Text style={styles.sectionHeader}>My medication</Text>
       <View style={styles.card}>
         {medications.length > 0 ? (
-          medications.map((med) => (
-            <View key={med.id} style={styles.cardItem}>
+          medications.map((med, index) => (
+            <View key={med.id ? med.id : `med-${index}`} style={styles.cardItem}>
               <Text style={styles.cardItemTitle}>{med.medication}</Text>
               <Text style={styles.cardItemSubtitle}>{med.dosage} • {med.frequency}</Text>
             </View>
@@ -169,7 +171,7 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#111', padding: 20 },
+  container: { flex: 1, backgroundColor: '#111', padding: 20, paddingTop: 70},
   topHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',

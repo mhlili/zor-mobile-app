@@ -85,8 +85,8 @@ function RootLayoutNav({
         <Stack.Screen name="fullCalendar" />
         <Stack.Screen name="log-data-screens/logSeizure" />
         <Stack.Screen name="log-data-screens/dailySurvey" />
-        <Stack.Screen name="detail-screens/settings" options={{ title: 'Settings' }} />
-        <Stack.Screen name="detail-screens/medication" options={{ title: 'Medications' }} />
+        <Stack.Screen name="detail-screens/settings" />
+        <Stack.Screen name="detail-screens/medication" />
         <Stack.Screen name="modals/edit-name" options={{ presentation: 'modal', headerShown: false }} />
       </Stack>
     </ThemeProvider>

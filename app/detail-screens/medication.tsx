@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 
 type Medication = {
   medication: string;
@@ -25,17 +24,15 @@ export default function MedicationScreen() {
   const router = useRouter();
   const [medications, setMedications] = useState<Medication[]>([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const loadData = async () => {
-        const stored = await AsyncStorage.getItem('medications');
-        if (stored) {
-          setMedications(JSON.parse(stored));
-        }
-      };
-      loadData();
-    }, [])
-  );
+  useEffect(() => {
+    const loadData = async () => {
+      const stored = await AsyncStorage.getItem('medications');
+      if (stored) {
+        setMedications(JSON.parse(stored));
+      }
+    };
+    loadData();
+  }, []);
 
   const updateDosage = async (text: string, index: number) => {
     const updated = [...medications];
