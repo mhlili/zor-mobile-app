@@ -16,20 +16,20 @@ You will also see any lint errors in the console.
 
 ## Scout Developers
 
-The contributions to this website were made with love by:
+The contributions to this app were made with love by:
 
-**Sanjana Kashyap** | Tech Lead
+**Heidi Eren** | Senior Developer
 
-kashyap.san@northeastern.edu
+eren.h@northeastern.edu
 
-**Garvin Chan** | Developer
+**Emily Lin** | Senior Developer
 
-[insert-email]
+lin.emi@northeastern.edu
 
-**William Pan** | Developer
+**Shireen Kumar** | Junior Developer
 
-[insert-email]
+kumar.shire@northeastern.edu
 
-**Bavesh M** | Developer
+**Alizeh Zaidi** | Junior Developer
 
-[insert-email]
+zaidi.al@northeastern.edu
